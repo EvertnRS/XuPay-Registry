@@ -51,8 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Message: 'Message',
-  QueueMessage: 'QueueMessage'
+  RegistryInstance: 'RegistryInstance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -71,25 +70,15 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const MessageScalarFieldEnum = {
+export const RegistryInstanceScalarFieldEnum = {
   id: 'id',
-  source: 'source',
-  type: 'type',
-  payload: 'payload',
-  timestamp: 'timestamp'
-} as const
-
-export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const QueueMessageScalarFieldEnum = {
-  id: 'id',
-  messageId: 'messageId',
+  target: 'target',
+  instanceName: 'instanceName',
   status: 'status',
-  retryCount: 'retryCount'
+  createdAt: 'createdAt'
 } as const
 
-export type QueueMessageScalarFieldEnum = (typeof QueueMessageScalarFieldEnum)[keyof typeof QueueMessageScalarFieldEnum]
+export type RegistryInstanceScalarFieldEnum = (typeof RegistryInstanceScalarFieldEnum)[keyof typeof RegistryInstanceScalarFieldEnum]
 
 
 export const SortOrder = {

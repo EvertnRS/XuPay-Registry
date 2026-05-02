@@ -9,12 +9,10 @@
 * 🟢 You can import this file directly.
 */
 
-export const QueueStatus = {
-  PENDING: 'PENDING',
-  PROCESSING: 'PROCESSING',
-  DONE: 'DONE',
-  FAILED: 'FAILED',
-  DEAD_LETTER: 'DEAD_LETTER'
+export const InstanceStatus = {
+  ACTIVE: 'ACTIVE',
+  MAINTENANCE: 'MAINTENANCE',
+  INACTIVE: 'INACTIVE'
 } as const
 
-export type QueueStatus = (typeof QueueStatus)[keyof typeof QueueStatus]
+export type InstanceStatus = (typeof InstanceStatus)[keyof typeof InstanceStatus]

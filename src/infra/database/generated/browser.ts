@@ -18,12 +18,7 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
- * Model Message
+ * Model RegistryInstance
  * 
  */
-export type Message = Prisma.MessageModel
-/**
- * Model QueueMessage
- * 
- */
-export type QueueMessage = Prisma.QueueMessageModel
+export type RegistryInstance = Prisma.RegistryInstanceModel

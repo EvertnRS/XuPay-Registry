@@ -384,8 +384,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Message: 'Message',
-  QueueMessage: 'QueueMessage'
+  RegistryInstance: 'RegistryInstance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,155 +400,81 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "message" | "queueMessage"
+    modelProps: "registryInstance"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    Message: {
-      payload: Prisma.$MessagePayload<ExtArgs>
-      fields: Prisma.MessageFieldRefs
+    RegistryInstance: {
+      payload: Prisma.$RegistryInstancePayload<ExtArgs>
+      fields: Prisma.RegistryInstanceFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.MessageFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload> | null
+          args: Prisma.RegistryInstanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.MessageFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         findFirst: {
-          args: Prisma.MessageFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload> | null
+          args: Prisma.RegistryInstanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.MessageFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         findMany: {
-          args: Prisma.MessageFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          args: Prisma.RegistryInstanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>[]
         }
         create: {
-          args: Prisma.MessageCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         createMany: {
-          args: Prisma.MessageCreateManyArgs<ExtArgs>
+          args: Prisma.RegistryInstanceCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         createManyAndReturn: {
-          args: Prisma.MessageCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          args: Prisma.RegistryInstanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>[]
         }
         delete: {
-          args: Prisma.MessageDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         update: {
-          args: Prisma.MessageUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         deleteMany: {
-          args: Prisma.MessageDeleteManyArgs<ExtArgs>
+          args: Prisma.RegistryInstanceDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.MessageUpdateManyArgs<ExtArgs>
+          args: Prisma.RegistryInstanceUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateManyAndReturn: {
-          args: Prisma.MessageUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          args: Prisma.RegistryInstanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>[]
         }
         upsert: {
-          args: Prisma.MessageUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessagePayload>
+          args: Prisma.RegistryInstanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistryInstancePayload>
         }
         aggregate: {
-          args: Prisma.MessageAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateMessage>
+          args: Prisma.RegistryInstanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRegistryInstance>
         }
         groupBy: {
-          args: Prisma.MessageGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.MessageGroupByOutputType>[]
+          args: Prisma.RegistryInstanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistryInstanceGroupByOutputType>[]
         }
         count: {
-          args: Prisma.MessageCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.MessageCountAggregateOutputType> | number
-        }
-      }
-    }
-    QueueMessage: {
-      payload: Prisma.$QueueMessagePayload<ExtArgs>
-      fields: Prisma.QueueMessageFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.QueueMessageFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.QueueMessageFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        findFirst: {
-          args: Prisma.QueueMessageFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.QueueMessageFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        findMany: {
-          args: Prisma.QueueMessageFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>[]
-        }
-        create: {
-          args: Prisma.QueueMessageCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        createMany: {
-          args: Prisma.QueueMessageCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.QueueMessageCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>[]
-        }
-        delete: {
-          args: Prisma.QueueMessageDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        update: {
-          args: Prisma.QueueMessageUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        deleteMany: {
-          args: Prisma.QueueMessageDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.QueueMessageUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.QueueMessageUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>[]
-        }
-        upsert: {
-          args: Prisma.QueueMessageUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$QueueMessagePayload>
-        }
-        aggregate: {
-          args: Prisma.QueueMessageAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateQueueMessage>
-        }
-        groupBy: {
-          args: Prisma.QueueMessageGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.QueueMessageGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.QueueMessageCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.QueueMessageCountAggregateOutputType> | number
+          args: Prisma.RegistryInstanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistryInstanceCountAggregateOutputType> | number
         }
       }
     }
@@ -592,25 +517,15 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const MessageScalarFieldEnum = {
+export const RegistryInstanceScalarFieldEnum = {
   id: 'id',
-  source: 'source',
-  type: 'type',
-  payload: 'payload',
-  timestamp: 'timestamp'
-} as const
-
-export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const QueueMessageScalarFieldEnum = {
-  id: 'id',
-  messageId: 'messageId',
+  target: 'target',
+  instanceName: 'instanceName',
   status: 'status',
-  retryCount: 'retryCount'
+  createdAt: 'createdAt'
 } as const
 
-export type QueueMessageScalarFieldEnum = (typeof QueueMessageScalarFieldEnum)[keyof typeof QueueMessageScalarFieldEnum]
+export type RegistryInstanceScalarFieldEnum = (typeof RegistryInstanceScalarFieldEnum)[keyof typeof RegistryInstanceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -650,6 +565,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'InstanceStatus'
+ */
+export type EnumInstanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstanceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InstanceStatus[]'
+ */
+export type ListEnumInstanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InstanceStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -664,20 +593,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
- * Reference to a field of type 'QueueStatus'
- */
-export type EnumQueueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueueStatus'>
-    
-
-
-/**
- * Reference to a field of type 'QueueStatus[]'
- */
-export type ListEnumQueueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueueStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -688,20 +603,6 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -814,8 +715,7 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
-  message?: Prisma.MessageOmit
-  queueMessage?: Prisma.QueueMessageOmit
+  registryInstance?: Prisma.RegistryInstanceOmit
 }
 
 /* Types for Logging */

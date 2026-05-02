@@ -12,28 +12,17 @@ datasource db {
   provider = "postgresql"
 }
 
-enum QueueStatus {
-  PENDING
-  PROCESSING
-  DONE
-  FAILED
-  DEAD_LETTER
+enum InstanceStatus {
+  ACTIVE
+  MAINTENANCE
+  INACTIVE
 }
 
-model Message {
-  id             String   @id @default(uuid()) @map("id")
-  source         String
-  type           String
-  payload        String
-  timestamp      DateTime @default(now()) @unique
-  queueMessages  QueueMessage[]
-}
-
-model QueueMessage {
-  id        String   @id @default(uuid()) @map("id")
-  messageId String
-  status    QueueStatus @default(PENDING)
-  retryCount Int
-  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+model RegistryInstance {
+  id         String   @id @default(uuid())
+  target       String
+  instanceName String   @unique
+  status     InstanceStatus @default(ACTIVE)
+  createdAt  DateTime @default(now())
 }
  

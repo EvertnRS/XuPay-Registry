@@ -31,8 +31,8 @@ export * from "./enums.js"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Messages
- * const messages = await prisma.message.findMany()
+ * // Fetch zero or more RegistryInstances
+ * const registryInstances = await prisma.registryInstance.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,12 +42,7 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
- * Model Message
+ * Model RegistryInstance
  * 
  */
-export type Message = Prisma.MessageModel
-/**
- * Model QueueMessage
- * 
- */
-export type QueueMessage = Prisma.QueueMessageModel
+export type RegistryInstance = Prisma.RegistryInstanceModel

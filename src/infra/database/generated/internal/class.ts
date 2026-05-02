@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.8.0",
   "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
   "activeProvider": "postgresql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/infra/database/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum QueueStatus {\n  PENDING\n  PROCESSING\n  DONE\n  FAILED\n  DEAD_LETTER\n}\n\nmodel Message {\n  id            String         @id @default(uuid()) @map(\"id\")\n  source        String\n  type          String\n  payload       String\n  timestamp     DateTime       @unique @default(now())\n  queueMessages QueueMessage[]\n}\n\nmodel QueueMessage {\n  id         String      @id @default(uuid()) @map(\"id\")\n  messageId  String\n  status     QueueStatus @default(PENDING)\n  retryCount Int\n  message    Message     @relation(fields: [messageId], references: [id], onDelete: Cascade)\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Get a free hosted Postgres database in seconds: `npx create-db`\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../src/infra/database/generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nenum InstanceStatus {\n  ACTIVE\n  MAINTENANCE\n  INACTIVE\n}\n\nmodel RegistryInstance {\n  id           String         @id @default(uuid())\n  target       String\n  instanceName String         @unique\n  status       InstanceStatus @default(ACTIVE)\n  createdAt    DateTime       @default(now())\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -32,10 +32,10 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Message\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"id\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"queueMessages\",\"kind\":\"object\",\"type\":\"QueueMessage\",\"relationName\":\"MessageToQueueMessage\"}],\"dbName\":null},\"QueueMessage\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"id\"},{\"name\":\"messageId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"QueueStatus\"},{\"name\":\"retryCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"message\",\"kind\":\"object\",\"type\":\"Message\",\"relationName\":\"MessageToQueueMessage\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"RegistryInstance\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"target\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"instanceName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"InstanceStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 config.parameterizationSchema = {
-  strings: JSON.parse("[\"where\",\"orderBy\",\"cursor\",\"message\",\"queueMessages\",\"_count\",\"Message.findUnique\",\"Message.findUniqueOrThrow\",\"Message.findFirst\",\"Message.findFirstOrThrow\",\"Message.findMany\",\"data\",\"Message.createOne\",\"Message.createMany\",\"Message.createManyAndReturn\",\"Message.updateOne\",\"Message.updateMany\",\"Message.updateManyAndReturn\",\"create\",\"update\",\"Message.upsertOne\",\"Message.deleteOne\",\"Message.deleteMany\",\"having\",\"_min\",\"_max\",\"Message.groupBy\",\"Message.aggregate\",\"QueueMessage.findUnique\",\"QueueMessage.findUniqueOrThrow\",\"QueueMessage.findFirst\",\"QueueMessage.findFirstOrThrow\",\"QueueMessage.findMany\",\"QueueMessage.createOne\",\"QueueMessage.createMany\",\"QueueMessage.createManyAndReturn\",\"QueueMessage.updateOne\",\"QueueMessage.updateMany\",\"QueueMessage.updateManyAndReturn\",\"QueueMessage.upsertOne\",\"QueueMessage.deleteOne\",\"QueueMessage.deleteMany\",\"_avg\",\"_sum\",\"QueueMessage.groupBy\",\"QueueMessage.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"messageId\",\"QueueStatus\",\"status\",\"retryCount\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"source\",\"type\",\"payload\",\"timestamp\",\"every\",\"some\",\"none\",\"is\",\"isNot\",\"connectOrCreate\",\"upsert\",\"createMany\",\"set\",\"disconnect\",\"delete\",\"connect\",\"updateMany\",\"deleteMany\",\"increment\",\"decrement\",\"multiply\",\"divide\"]"),
-  graph: "bxQgCQQAAEcAIC4AAEQAMC8AAAkAEDAAAEQAMDEBAAAAAUEBAEUAIUIBAEUAIUMBAEUAIURAAAAAAQEAAAABACAIAwAASwAgLgAASAAwLwAAAwAQMAAASAAwMQEARQAhMgEARQAhNAAASTQiNQIASgAhAQMAAGkAIAgDAABLACAuAABIADAvAAADABAwAABIADAxAQAAAAEyAQBFACE0AABJNCI1AgBKACEDAAAAAwAgAQAABAAwAgAABQAgAQAAAAMAIAEAAAABACAJBAAARwAgLgAARAAwLwAACQAQMAAARAAwMQEARQAhQQEARQAhQgEARQAhQwEARQAhREAARgAhAQQAAGgAIAMAAAAJACABAAAKADACAAABACADAAAACQAgAQAACgAwAgAAAQAgAwAAAAkAIAEAAAoAMAIAAAEAIAYEAABnACAxAQAAAAFBAQAAAAFCAQAAAAFDAQAAAAFEQAAAAAEBCwAADgAgBTEBAAAAAUEBAAAAAUIBAAAAAUMBAAAAAURAAAAAAQELAAAQADABCwAAEAAwBgQAAFoAIDEBAFEAIUEBAFEAIUIBAFEAIUMBAFEAIURAAFkAIQIAAAABACALAAATACAFMQEAUQAhQQEAUQAhQgEAUQAhQwEAUQAhREAAWQAhAgAAAAkAIAsAABUAIAIAAAAJACALAAAVACADAAAAAQAgEgAADgAgEwAAEwAgAQAAAAEAIAEAAAAJACADBQAAVgAgGAAAWAAgGQAAVwAgCC4AAEAAMC8AABwAEDAAAEAAMDEBADYAIUEBADYAIUIBADYAIUMBADYAIURAAEEAIQMAAAAJACABAAAbADAXAAAcACADAAAACQAgAQAACgAwAgAAAQAgAQAAAAUAIAEAAAAFACADAAAAAwAgAQAABAAwAgAABQAgAwAAAAMAIAEAAAQAMAIAAAUAIAMAAAADACABAAAEADACAAAFACAFAwAAVQAgMQEAAAABMgEAAAABNAAAADQCNQIAAAABAQsAACQAIAQxAQAAAAEyAQAAAAE0AAAANAI1AgAAAAEBCwAAJgAwAQsAACYAMAUDAABUACAxAQBRACEyAQBRACE0AABSNCI1AgBTACECAAAABQAgCwAAKQAgBDEBAFEAITIBAFEAITQAAFI0IjUCAFMAIQIAAAADACALAAArACACAAAAAwAgCwAAKwAgAwAAAAUAIBIAACQAIBMAACkAIAEAAAAFACABAAAAAwAgBQUAAEwAIBgAAE8AIBkAAE4AICoAAE0AICsAAFAAIAcuAAA1ADAvAAAyABAwAAA1ADAxAQA2ACEyAQA2ACE0AAA3NCI1AgA4ACEDAAAAAwAgAQAAMQAwFwAAMgAgAwAAAAMAIAEAAAQAMAIAAAUAIAcuAAA1ADAvAAAyABAwAAA1ADAxAQA2ACEyAQA2ACE0AAA3NCI1AgA4ACEOBQAAOgAgGAAAPwAgGQAAPwAgNgEAAAABNwEAAAAEOAEAAAAEOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAPgAhPgEAAAABPwEAAAABQAEAAAABBwUAADoAIBgAAD0AIBkAAD0AIDYAAAA0AjcAAAA0CDgAAAA0CD0AADw0Ig0FAAA6ACAYAAA6ACAZAAA6ACAqAAA7ACArAAA6ACA2AgAAAAE3AgAAAAQ4AgAAAAQ5AgAAAAE6AgAAAAE7AgAAAAE8AgAAAAE9AgA5ACENBQAAOgAgGAAAOgAgGQAAOgAgKgAAOwAgKwAAOgAgNgIAAAABNwIAAAAEOAIAAAAEOQIAAAABOgIAAAABOwIAAAABPAIAAAABPQIAOQAhCDYCAAAAATcCAAAABDgCAAAABDkCAAAAAToCAAAAATsCAAAAATwCAAAAAT0CADoAIQg2CAAAAAE3CAAAAAQ4CAAAAAQ5CAAAAAE6CAAAAAE7CAAAAAE8CAAAAAE9CAA7ACEHBQAAOgAgGAAAPQAgGQAAPQAgNgAAADQCNwAAADQIOAAAADQIPQAAPDQiBDYAAAA0AjcAAAA0CDgAAAA0CD0AAD00Ig4FAAA6ACAYAAA_ACAZAAA_ACA2AQAAAAE3AQAAAAQ4AQAAAAQ5AQAAAAE6AQAAAAE7AQAAAAE8AQAAAAE9AQA-ACE-AQAAAAE_AQAAAAFAAQAAAAELNgEAAAABNwEAAAAEOAEAAAAEOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAPwAhPgEAAAABPwEAAAABQAEAAAABCC4AAEAAMC8AABwAEDAAAEAAMDEBADYAIUEBADYAIUIBADYAIUMBADYAIURAAEEAIQsFAAA6ACAYAABDACAZAABDACA2QAAAAAE3QAAAAAQ4QAAAAAQ5QAAAAAE6QAAAAAE7QAAAAAE8QAAAAAE9QABCACELBQAAOgAgGAAAQwAgGQAAQwAgNkAAAAABN0AAAAAEOEAAAAAEOUAAAAABOkAAAAABO0AAAAABPEAAAAABPUAAQgAhCDZAAAAAATdAAAAABDhAAAAABDlAAAAAATpAAAAAATtAAAAAATxAAAAAAT1AAEMAIQkEAABHACAuAABEADAvAAAJABAwAABEADAxAQBFACFBAQBFACFCAQBFACFDAQBFACFEQABGACELNgEAAAABNwEAAAAEOAEAAAAEOQEAAAABOgEAAAABOwEAAAABPAEAAAABPQEAPwAhPgEAAAABPwEAAAABQAEAAAABCDZAAAAAATdAAAAABDhAAAAABDlAAAAAATpAAAAAATtAAAAAATxAAAAAAT1AAEMAIQNFAAADACBGAAADACBHAAADACAIAwAASwAgLgAASAAwLwAAAwAQMAAASAAwMQEARQAhMgEARQAhNAAASTQiNQIASgAhBDYAAAA0AjcAAAA0CDgAAAA0CD0AAD00Igg2AgAAAAE3AgAAAAQ4AgAAAAQ5AgAAAAE6AgAAAAE7AgAAAAE8AgAAAAE9AgA6ACELBAAARwAgLgAARAAwLwAACQAQMAAARAAwMQEARQAhQQEARQAhQgEARQAhQwEARQAhREAARgAhSAAACQAgSQAACQAgAAAAAAABTQEAAAABAU0AAAA0AgVNAgAAAAFTAgAAAAFUAgAAAAFVAgAAAAFWAgAAAAEFEgAAawAgEwAAbgAgSgAAbAAgSwAAbQAgUAAAAQAgAxIAAGsAIEoAAGwAIFAAAAEAIAAAAAFNQAAAAAELEgAAWwAwEwAAYAAwSgAAXAAwSwAAXQAwTAAAXgAgTQAAXwAwTgAAXwAwTwAAXwAwUAAAXwAwUQAAYQAwUgAAYgAwAzEBAAAAATQAAAA0AjUCAAAAAQIAAAAFACASAABmACADAAAABQAgEgAAZgAgEwAAZQAgAQsAAGoAMAgDAABLACAuAABIADAvAAADABAwAABIADAxAQAAAAEyAQBFACE0AABJNCI1AgBKACECAAAABQAgCwAAZQAgAgAAAGMAIAsAAGQAIAcuAABiADAvAABjABAwAABiADAxAQBFACEyAQBFACE0AABJNCI1AgBKACEHLgAAYgAwLwAAYwAQMAAAYgAwMQEARQAhMgEARQAhNAAASTQiNQIASgAhAzEBAFEAITQAAFI0IjUCAFMAIQMxAQBRACE0AABSNCI1AgBTACEDMQEAAAABNAAAADQCNQIAAAABBBIAAFsAMEoAAFwAMEwAAF4AIFAAAF8AMAABBAAAaAAgAzEBAAAAATQAAAA0AjUCAAAAAQUxAQAAAAFBAQAAAAFCAQAAAAFDAQAAAAFEQAAAAAECAAAAAQAgEgAAawAgAwAAAAkAIBIAAGsAIBMAAG8AIAcAAAAJACALAABvACAxAQBRACFBAQBRACFCAQBRACFDAQBRACFEQABZACEFMQEAUQAhQQEAUQAhQgEAUQAhQwEAUQAhREAAWQAhAgQGAgUAAwEDAAEBBAcAAAAAAwUACBgACRkACgAAAAMFAAgYAAkZAAoBAwABAQMAAQUFAA8YABIZABMqABArABEAAAAAAAUFAA8YABIZABMqABArABEGAgEHCAEICwEJDAEKDQEMDwENEQQOEgUPFAEQFgQRFwYUGAEVGQEWGgQaHQcbHgscHwIdIAIeIQIfIgIgIwIhJQIiJwQjKAwkKgIlLAQmLQ0nLgIoLwIpMAQsMw4tNBQ"
+  strings: JSON.parse("[\"where\",\"RegistryInstance.findUnique\",\"RegistryInstance.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"RegistryInstance.findFirst\",\"RegistryInstance.findFirstOrThrow\",\"RegistryInstance.findMany\",\"data\",\"RegistryInstance.createOne\",\"RegistryInstance.createMany\",\"RegistryInstance.createManyAndReturn\",\"RegistryInstance.updateOne\",\"RegistryInstance.updateMany\",\"RegistryInstance.updateManyAndReturn\",\"create\",\"update\",\"RegistryInstance.upsertOne\",\"RegistryInstance.deleteOne\",\"RegistryInstance.deleteMany\",\"having\",\"_count\",\"_min\",\"_max\",\"RegistryInstance.groupBy\",\"RegistryInstance.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"target\",\"instanceName\",\"InstanceStatus\",\"status\",\"createdAt\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"set\"]"),
+  graph: "LgkQCBoAACUAMBsAAAQAEBwAACUAMB0BAAAAAR4BACYAIR8BAAAAASEAACchIiJAACgAIQEAAAABACABAAAAAQAgCBoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISEAACchIiJAACgAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAFHQEAAAABHgEAAAABHwEAAAABIQAAACECIkAAAAABAQgAAAkAIAUdAQAAAAEeAQAAAAEfAQAAAAEhAAAAIQIiQAAAAAEBCAAACwAwAQgAAAsAMAUdAQAsACEeAQAsACEfAQAsACEhAAAtISIiQAAuACECAAAAAQAgCAAADgAgBR0BACwAIR4BACwAIR8BACwAISEAAC0hIiJAAC4AIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgAxUAACkAIBYAACsAIBcAACoAIAgaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEhAAAcISIiQAAdACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAgaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEhAAAcISIiQAAdACEOFQAAHwAgFgAAJAAgFwAAJAAgIwEAAAABJAEAAAAEJQEAAAAEJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAIwAhKwEAAAABLAEAAAABLQEAAAABBxUAAB8AIBYAACIAIBcAACIAICMAAAAhAiQAAAAhCCUAAAAhCCoAACEhIgsVAAAfACAWAAAgACAXAAAgACAjQAAAAAEkQAAAAAQlQAAAAAQmQAAAAAEnQAAAAAEoQAAAAAEpQAAAAAEqQAAeACELFQAAHwAgFgAAIAAgFwAAIAAgI0AAAAABJEAAAAAEJUAAAAAEJkAAAAABJ0AAAAABKEAAAAABKUAAAAABKkAAHgAhCCMCAAAAASQCAAAABCUCAAAABCYCAAAAAScCAAAAASgCAAAAASkCAAAAASoCAB8AIQgjQAAAAAEkQAAAAAQlQAAAAAQmQAAAAAEnQAAAAAEoQAAAAAEpQAAAAAEqQAAgACEHFQAAHwAgFgAAIgAgFwAAIgAgIwAAACECJAAAACEIJQAAACEIKgAAISEiBCMAAAAhAiQAAAAhCCUAAAAhCCoAACIhIg4VAAAfACAWAAAkACAXAAAkACAjAQAAAAEkAQAAAAQlAQAAAAQmAQAAAAEnAQAAAAEoAQAAAAEpAQAAAAEqAQAjACErAQAAAAEsAQAAAAEtAQAAAAELIwEAAAABJAEAAAAEJQEAAAAEJgEAAAABJwEAAAABKAEAAAABKQEAAAABKgEAJAAhKwEAAAABLAEAAAABLQEAAAABCBoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISEAACchIiJAACgAIQsjAQAAAAEkAQAAAAQlAQAAAAQmAQAAAAEnAQAAAAEoAQAAAAEpAQAAAAEqAQAkACErAQAAAAEsAQAAAAEtAQAAAAEEIwAAACECJAAAACEIJQAAACEIKgAAIiEiCCNAAAAAASRAAAAABCVAAAAABCZAAAAAASdAAAAAAShAAAAAASlAAAAAASpAACAAIQAAAAEuAQAAAAEBLgAAACECAS5AAAAAAQAAAAADFQAGFgAHFwAIAAAAAxUABhYABxcACAECAQIDAQUGAQYHAQcIAQkKAQoMAgsNAwwPAQ0RAg4SBBETARIUARMVAhgYBRkZCQ"
 }
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
@@ -70,8 +70,8 @@ export interface PrismaClientConstructor {
    * const prisma = new PrismaClient({
    *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
    * })
-   * // Fetch zero or more Messages
-   * const messages = await prisma.message.findMany()
+   * // Fetch zero or more RegistryInstances
+   * const registryInstances = await prisma.registryInstance.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -94,8 +94,8 @@ export interface PrismaClientConstructor {
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Messages
- * const messages = await prisma.message.findMany()
+ * // Fetch zero or more RegistryInstances
+ * const registryInstances = await prisma.registryInstance.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -189,24 +189,14 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.message`: Exposes CRUD operations for the **Message** model.
+   * `prisma.registryInstance`: Exposes CRUD operations for the **RegistryInstance** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Messages
-    * const messages = await prisma.message.findMany()
+    * // Fetch zero or more RegistryInstances
+    * const registryInstances = await prisma.registryInstance.findMany()
     * ```
     */
-  get message(): Prisma.MessageDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.queueMessage`: Exposes CRUD operations for the **QueueMessage** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more QueueMessages
-    * const queueMessages = await prisma.queueMessage.findMany()
-    * ```
-    */
-  get queueMessage(): Prisma.QueueMessageDelegate<ExtArgs, { omit: OmitOpts }>;
+  get registryInstance(): Prisma.RegistryInstanceDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {
