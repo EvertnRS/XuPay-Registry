@@ -45,7 +45,7 @@ export class ResponseParser {
             service: payload.service,
             instanceName: payload.instanceName,
           },
-          timestamp,
+          timestamp:timestamp.trim(),
         },
       };
     } catch (error: any) {
