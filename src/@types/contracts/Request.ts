@@ -9,14 +9,12 @@ export type Request = {
 };
 
 enum Source {
-  LOAD_BALANCER = "LOAD_BALANCER"
+  LOAD_BALANCE = "LOAD_BALANCE"
 }
 
 enum Type {
-  CREATE_SERVICE = "CREATE_SERVICE",
-  FIND_INSTANCE_NAME = "FIND_INSTANCE_NAME",
-  UPDATE_SERVICE = "UPDATE_SERVICE",
-  DELETE_SERVICE = "DELETE_SERVICE"
+  RESPONSE = "RESPONSE",
+  REQUEST = "REQUEST"
 }
 
 export function isValidBodyRequest(

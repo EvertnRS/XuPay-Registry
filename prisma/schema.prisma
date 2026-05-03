@@ -20,7 +20,7 @@ enum InstanceStatus {
 
 model RegistryInstance {
   id         String   @id @default(uuid())
-  target       String
+  service       String
   instanceName String   @unique
   status     InstanceStatus @default(ACTIVE)
   createdAt  DateTime @default(now())

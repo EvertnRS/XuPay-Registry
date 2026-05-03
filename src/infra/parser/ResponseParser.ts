@@ -1,43 +1,36 @@
-import type { Response } from "../../@types/contracts/Response";
-import type { Request } from "../../@types/contracts/Request";
-import { Socket } from "net";
-import { ErrorHandler } from "../middleware/Error";
+import { Response } from "@/@types/contracts/Response";
+import { Request } from "@/@types/contracts/Request";
 
 export class ResponseParser {
-  public static deserialize(rawRequest: string, socket: Socket): Request | void {
-    try {
-      const parts = rawRequest.split("|");
+    public static deserialize(rawRequest: string): Request | void {
+        try {
+        const parts = rawRequest.split("|");
 
-      if (parts.length !== 3) {
-        return ErrorHandler.handle(
-          "Requisição com campos diferentes do esperado " + rawRequest,
-          socket
+        if (parts.length !== 3) {
+            throw new Error(
+          "Requisição com campos diferentes do esperado " + rawRequest
         );
-      }
+        }
 
-      const [method, path, rawBody] = parts;
+        const [method, path, rawBody] = parts;
 
-      const bodyParts = rawBody.split(";");
+        const bodyParts = rawBody.split(";");
 
-      if (bodyParts.length !== 4) {
-        return ErrorHandler.handle(
-          "Corpo da requisição com campos diferentes do esperado " + rawRequest,
-          socket
-        );
-      }
+        if (bodyParts.length !== 4) {
+            throw new Error(
+                "Corpo da requisição com campos diferentes do esperado " + rawBody
+            );
+        }
 
       const [source, type, rawPayload, timestamp] = bodyParts;
 
       const payload = this.parsePayload(rawPayload);
 
-      const requiredPayloadFields = ["target"];
+      const requiredPayloadFields = ["service"];
 
       for (const field of requiredPayloadFields) {
         if (!payload[field]) {
-          return ErrorHandler.handle(
-            `Campo obrigatório ausente no payload: ${field}`,
-            socket
-          );
+          throw new Error(`Campo obrigatório ausente no payload: ${field}`);
         }
       }
 
@@ -49,17 +42,14 @@ export class ResponseParser {
           type,
           payload: {
             id: payload.id,
-            target: payload.target,
+            service: payload.service,
             instanceName: payload.instanceName,
           },
           timestamp,
         },
       };
     } catch (error: any) {
-      return ErrorHandler.handle(
-        `Formato inválido de corpo: ${error.message}`,
-        socket
-      );
+      throw new Error(`Formato inválido de corpo: ${error.message}`);
     }
   }
 

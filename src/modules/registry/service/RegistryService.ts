@@ -15,20 +15,20 @@ export class RegistryService {
             return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
         }
 
-        const registries = await this.registryRepository.findByTarget({
-            target: messageBody.payload.target
+        const registries = await this.registryRepository.findByService({
+            service: messageBody.payload.service
         });
         if (registries.length === 0) {
-            return ErrorHandler.handle("Nenhum registro encontrado para o target especificado", socket);
+            return ErrorHandler.handle("Nenhum registro encontrado para o serviço especificado", socket);
         }
 
         const payload = registries.map(registry => {
-            return `id=${registry.id},target=${registry.target},instanceName=${registry.instanceName},status=${registry.status}`;
+            return `id=${registry.id},service=${registry.service},instanceName=${registry.instanceName},status=${registry.status}`;
         });
 
         const response = ResponseParser.serialize({
             method: "GET",
-            path: "/service",
+            path: "instance",
             body: {
                 source: "REGISTRY_SERVICE",
                 type: "RESPONSE",
@@ -51,7 +51,7 @@ export class RegistryService {
         }
         
         await this.registryRepository.createRegistry({
-            target: messageBody.payload.target,
+            service: messageBody.payload.service,
             instanceName: messageBody.payload.instanceName
         });
 

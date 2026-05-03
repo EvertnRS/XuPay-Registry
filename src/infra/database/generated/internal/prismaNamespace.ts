@@ -519,7 +519,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const RegistryInstanceScalarFieldEnum = {
   id: 'id',
-  target: 'target',
+  service: 'service',
   instanceName: 'instanceName',
   status: 'status',
   createdAt: 'createdAt'

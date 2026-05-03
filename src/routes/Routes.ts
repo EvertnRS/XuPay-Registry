@@ -17,13 +17,13 @@ export class Routes {
     }
 
     public handle(request: Request, socket: Socket): void {
-        if (request.path === "/service" && request.method === "GET") {
+        if (request.path === "instance" && request.method === "GET" && request.body.type === 'REQUEST') {
             this.registryController.getRegistries(request, socket);
-        } else if (request.path === "/service" && request.method === "POST") {
+        } else if (request.path === "instance-create" && request.method === "POST" && request.body.type === 'REQUEST') {
             this.registryController.createRegistry(request, socket);
-        } else if (request.path === "/service" && request.method === "PUT") {
+        } else if (request.path === "instance-update" && request.method === "PUT" && request.body.type === 'REQUEST') {
             this.registryController.updateRegistry(request, socket);
-        } else if (request.path === "/service" && request.method === "DELETE") {
+        } else if (request.path === "instance-delete" && request.method === "DELETE" && request.body.type === 'REQUEST') {
             this.registryController.deleteRegistry(request, socket);
         } else {
             return ErrorHandler.handle("Rota não encontrada", socket);

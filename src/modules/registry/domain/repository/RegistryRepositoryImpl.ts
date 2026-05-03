@@ -7,13 +7,13 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
     public async createRegistry(registry: Omit<RegistryInstance, 'id'| 'status' | 'createdAt'>): Promise<any> {
         return await prismaClient.registryInstance.create({
             data: {
-                target: registry.target,
+                service: registry.service,
                 instanceName: registry.instanceName
             }
         });
     }
     
-    public async updateRegistry(registry: Omit<RegistryInstance, 'target'| 'instanceName' | 'createdAt'>): Promise<any> {
+    public async updateRegistry(registry: Omit<RegistryInstance, 'service'| 'instanceName' | 'createdAt'>): Promise<any> {
         return await prismaClient.registryInstance.update({
             where: { id: registry.id },
             data: {
@@ -22,16 +22,16 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
         });
     }
 
-    public async deleteRegistry(registry: Omit<RegistryInstance, 'target'| 'instanceName' | 'createdAt' | 'status'>): Promise<void> {
+    public async deleteRegistry(registry: Omit<RegistryInstance, 'service'| 'instanceName' | 'createdAt' | 'status'>): Promise<void> {
         await prismaClient.registryInstance.delete({
             where: { id:registry.id }
         });
     }
 
-    public async findByTarget(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status'>): Promise<Array<RegistryInstance>> {
+    public async findByService(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status'>): Promise<Array<RegistryInstance>> {
         return await prismaClient.registryInstance.findMany({
             where: {
-                target: registry.target,
+                service: registry.service,
                 status: InstanceStatus.ACTIVE
             }
         });

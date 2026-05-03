@@ -26,7 +26,7 @@ export type AggregateRegistryInstance = {
 
 export type RegistryInstanceMinAggregateOutputType = {
   id: string | null
-  target: string | null
+  service: string | null
   instanceName: string | null
   status: $Enums.InstanceStatus | null
   createdAt: Date | null
@@ -34,7 +34,7 @@ export type RegistryInstanceMinAggregateOutputType = {
 
 export type RegistryInstanceMaxAggregateOutputType = {
   id: string | null
-  target: string | null
+  service: string | null
   instanceName: string | null
   status: $Enums.InstanceStatus | null
   createdAt: Date | null
@@ -42,7 +42,7 @@ export type RegistryInstanceMaxAggregateOutputType = {
 
 export type RegistryInstanceCountAggregateOutputType = {
   id: number
-  target: number
+  service: number
   instanceName: number
   status: number
   createdAt: number
@@ -52,7 +52,7 @@ export type RegistryInstanceCountAggregateOutputType = {
 
 export type RegistryInstanceMinAggregateInputType = {
   id?: true
-  target?: true
+  service?: true
   instanceName?: true
   status?: true
   createdAt?: true
@@ -60,7 +60,7 @@ export type RegistryInstanceMinAggregateInputType = {
 
 export type RegistryInstanceMaxAggregateInputType = {
   id?: true
-  target?: true
+  service?: true
   instanceName?: true
   status?: true
   createdAt?: true
@@ -68,7 +68,7 @@ export type RegistryInstanceMaxAggregateInputType = {
 
 export type RegistryInstanceCountAggregateInputType = {
   id?: true
-  target?: true
+  service?: true
   instanceName?: true
   status?: true
   createdAt?: true
@@ -149,7 +149,7 @@ export type RegistryInstanceGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type RegistryInstanceGroupByOutputType = {
   id: string
-  target: string
+  service: string
   instanceName: string
   status: $Enums.InstanceStatus
   createdAt: Date
@@ -178,7 +178,7 @@ export type RegistryInstanceWhereInput = {
   OR?: Prisma.RegistryInstanceWhereInput[]
   NOT?: Prisma.RegistryInstanceWhereInput | Prisma.RegistryInstanceWhereInput[]
   id?: Prisma.StringFilter<"RegistryInstance"> | string
-  target?: Prisma.StringFilter<"RegistryInstance"> | string
+  service?: Prisma.StringFilter<"RegistryInstance"> | string
   instanceName?: Prisma.StringFilter<"RegistryInstance"> | string
   status?: Prisma.EnumInstanceStatusFilter<"RegistryInstance"> | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
@@ -186,7 +186,7 @@ export type RegistryInstanceWhereInput = {
 
 export type RegistryInstanceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  service?: Prisma.SortOrder
   instanceName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -198,14 +198,14 @@ export type RegistryInstanceWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RegistryInstanceWhereInput | Prisma.RegistryInstanceWhereInput[]
   OR?: Prisma.RegistryInstanceWhereInput[]
   NOT?: Prisma.RegistryInstanceWhereInput | Prisma.RegistryInstanceWhereInput[]
-  target?: Prisma.StringFilter<"RegistryInstance"> | string
+  service?: Prisma.StringFilter<"RegistryInstance"> | string
   status?: Prisma.EnumInstanceStatusFilter<"RegistryInstance"> | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
 }, "id" | "instanceName">
 
 export type RegistryInstanceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  service?: Prisma.SortOrder
   instanceName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -219,7 +219,7 @@ export type RegistryInstanceScalarWhereWithAggregatesInput = {
   OR?: Prisma.RegistryInstanceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RegistryInstanceScalarWhereWithAggregatesInput | Prisma.RegistryInstanceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
-  target?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
+  service?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
   instanceName?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
   status?: Prisma.EnumInstanceStatusWithAggregatesFilter<"RegistryInstance"> | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RegistryInstance"> | Date | string
@@ -227,7 +227,7 @@ export type RegistryInstanceScalarWhereWithAggregatesInput = {
 
 export type RegistryInstanceCreateInput = {
   id?: string
-  target: string
+  service: string
   instanceName: string
   status?: $Enums.InstanceStatus
   createdAt?: Date | string
@@ -235,7 +235,7 @@ export type RegistryInstanceCreateInput = {
 
 export type RegistryInstanceUncheckedCreateInput = {
   id?: string
-  target: string
+  service: string
   instanceName: string
   status?: $Enums.InstanceStatus
   createdAt?: Date | string
@@ -243,7 +243,7 @@ export type RegistryInstanceUncheckedCreateInput = {
 
 export type RegistryInstanceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  target?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
   instanceName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -251,7 +251,7 @@ export type RegistryInstanceUpdateInput = {
 
 export type RegistryInstanceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  target?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
   instanceName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -259,7 +259,7 @@ export type RegistryInstanceUncheckedUpdateInput = {
 
 export type RegistryInstanceCreateManyInput = {
   id?: string
-  target: string
+  service: string
   instanceName: string
   status?: $Enums.InstanceStatus
   createdAt?: Date | string
@@ -267,7 +267,7 @@ export type RegistryInstanceCreateManyInput = {
 
 export type RegistryInstanceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  target?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
   instanceName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -275,7 +275,7 @@ export type RegistryInstanceUpdateManyMutationInput = {
 
 export type RegistryInstanceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  target?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.StringFieldUpdateOperationsInput | string
   instanceName?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -283,7 +283,7 @@ export type RegistryInstanceUncheckedUpdateManyInput = {
 
 export type RegistryInstanceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  service?: Prisma.SortOrder
   instanceName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -291,7 +291,7 @@ export type RegistryInstanceCountOrderByAggregateInput = {
 
 export type RegistryInstanceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  service?: Prisma.SortOrder
   instanceName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -299,7 +299,7 @@ export type RegistryInstanceMaxOrderByAggregateInput = {
 
 export type RegistryInstanceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  target?: Prisma.SortOrder
+  service?: Prisma.SortOrder
   instanceName?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -321,7 +321,7 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type RegistryInstanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  target?: boolean
+  service?: boolean
   instanceName?: boolean
   status?: boolean
   createdAt?: boolean
@@ -329,7 +329,7 @@ export type RegistryInstanceSelect<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type RegistryInstanceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  target?: boolean
+  service?: boolean
   instanceName?: boolean
   status?: boolean
   createdAt?: boolean
@@ -337,7 +337,7 @@ export type RegistryInstanceSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
 
 export type RegistryInstanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  target?: boolean
+  service?: boolean
   instanceName?: boolean
   status?: boolean
   createdAt?: boolean
@@ -345,20 +345,20 @@ export type RegistryInstanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
 
 export type RegistryInstanceSelectScalar = {
   id?: boolean
-  target?: boolean
+  service?: boolean
   instanceName?: boolean
   status?: boolean
   createdAt?: boolean
 }
 
-export type RegistryInstanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "target" | "instanceName" | "status" | "createdAt", ExtArgs["result"]["registryInstance"]>
+export type RegistryInstanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "service" | "instanceName" | "status" | "createdAt", ExtArgs["result"]["registryInstance"]>
 
 export type $RegistryInstancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RegistryInstance"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    target: string
+    service: string
     instanceName: string
     status: $Enums.InstanceStatus
     createdAt: Date
@@ -786,7 +786,7 @@ export interface Prisma__RegistryInstanceClient<T, Null = never, ExtArgs extends
  */
 export interface RegistryInstanceFieldRefs {
   readonly id: Prisma.FieldRef<"RegistryInstance", 'String'>
-  readonly target: Prisma.FieldRef<"RegistryInstance", 'String'>
+  readonly service: Prisma.FieldRef<"RegistryInstance", 'String'>
   readonly instanceName: Prisma.FieldRef<"RegistryInstance", 'String'>
   readonly status: Prisma.FieldRef<"RegistryInstance", 'InstanceStatus'>
   readonly createdAt: Prisma.FieldRef<"RegistryInstance", 'DateTime'>
