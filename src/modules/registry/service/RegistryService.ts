@@ -11,7 +11,12 @@ export class RegistryService {
     ) {}
 
     public async getRegistries(messageBody: MessageBody, socket: Socket): Promise<void> {
-        const registries = await this.registryRepository.findByTarget(messageBody.payload.target);
+        const registries = await this.registryRepository.findByTarget({
+            target: messageBody.payload.target
+        });
+        if (registries.length === 0) {
+            return ErrorHandler.handle("Nenhum registro encontrado para o target especificado", socket);
+        }
 
         const payload = registries.map(registry => {
             return `${registry.target},${registry.status},${registry.instanceName}`;
@@ -20,8 +25,9 @@ export class RegistryService {
         const response = ResponseParser.serialize({
             id: "RegistryService",
             type: "response",
-            payload: payload.join(';')
+            payload: payload.join(',')
         });
+
 
         socket.write(response);
         socket.end();
@@ -32,7 +38,10 @@ export class RegistryService {
             return ErrorHandler.handle("Nome de instância para essa rota é obrigatório", socket);
         }
         
-        await this.registryRepository.createRegistry(messageBody.payload.target, messageBody.payload.instanceName);
+        await this.registryRepository.createRegistry({
+            target: messageBody.payload.target,
+            instanceName: messageBody.payload.instanceName
+        });
 
         socket.write("Registro criado com sucesso");
         socket.end();
@@ -51,7 +60,10 @@ export class RegistryService {
             return ErrorHandler.handle("Status de instância para essa rota é obrigatório", socket);
         }
         
-        await this.registryRepository.updateRegistry(messageBody.payload.id, messageBody.payload.target, messageBody.payload.instanceName, messageBody.payload.status);
+        await this.registryRepository.updateRegistry({
+            id: messageBody.payload.id,
+            status: messageBody.payload.status
+        });
 
         socket.write("Registro atualizado com sucesso");
         socket.end();
@@ -62,7 +74,9 @@ export class RegistryService {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
 
-        await this.registryRepository.deleteRegistry(messageBody.payload.id);
+        await this.registryRepository.deleteRegistry({
+            id: messageBody.payload.id
+        });
 
         socket.write("Registro deletado com sucesso");
         socket.end();

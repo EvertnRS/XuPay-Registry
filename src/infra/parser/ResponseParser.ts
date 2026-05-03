@@ -1,10 +1,10 @@
-import type { Response }  from "../../@types/contracts/Response";
-import type { Request }  from "../../@types/contracts/Request";
+import type { Response } from "../../@types/contracts/Response";
+import type { Request } from "../../@types/contracts/Request";
 import { Socket } from "net";
 import { ErrorHandler } from "../middleware/Error";
 
 export class ResponseParser {
-    public static deserialize(rawRequest: string, socket: Socket): Request | void {
+  public static deserialize(rawRequest: string, socket: Socket): Request | void {
     try {
       const parts = rawRequest.split("|");
 
@@ -17,21 +17,25 @@ export class ResponseParser {
 
       const [method, path, rawBody] = parts;
 
-      const body = this.parseKeyValueBody(rawBody);
+      const bodyParts = rawBody.split(";");
 
-      const requiredFields = [
-        "source",
-        "type",
-        "id",
-        "target",
-        "instanceName",
-        "timestamp",
-      ];
+      if (bodyParts.length !== 4) {
+        return ErrorHandler.handle(
+          "Corpo da requisição com campos diferentes do esperado " + rawRequest,
+          socket
+        );
+      }
 
-      for (const field of requiredFields) {
-        if (!body[field]) {
+      const [source, type, rawPayload, timestamp] = bodyParts;
+
+      const payload = this.parsePayload(rawPayload);
+
+      const requiredPayloadFields = ["target"];
+
+      for (const field of requiredPayloadFields) {
+        if (!payload[field]) {
           return ErrorHandler.handle(
-            `Campo obrigatório ausente: ${field}`,
+            `Campo obrigatório ausente no payload: ${field}`,
             socket
           );
         }
@@ -41,14 +45,14 @@ export class ResponseParser {
         method,
         path,
         body: {
-          source: body.source,
-          type: body.type,
+          source,
+          type,
           payload: {
-            id: body.id,
-            target: body.target,
-            instanceName: body.instanceName,
+            id: payload.id,
+            target: payload.target,
+            instanceName: payload.instanceName,
           },
-          timestamp: body.timestamp,
+          timestamp,
         },
       };
     } catch (error: any) {
@@ -59,32 +63,32 @@ export class ResponseParser {
     }
   }
 
-  private static parseKeyValueBody(rawBody: string): Record<string, string> {
-    const result: Record<string, string> = {};
+  private static parsePayload(rawPayload: string): Record<string, string> {
+    const payload: Record<string, string> = {};
 
-    const fields = rawBody.split(";");
+    const fields = rawPayload.split(",");
 
     for (const field of fields) {
       const separatorIndex = field.indexOf("=");
 
       if (separatorIndex === -1) {
-        throw new Error(`Campo sem "=": ${field}`);
+        throw new Error(`Campo de payload sem "=": ${field}`);
       }
 
       const key = field.slice(0, separatorIndex).trim();
       const value = field.slice(separatorIndex + 1).trim();
 
       if (!key || !value) {
-        throw new Error(`Campo inválido: ${field}`);
+        throw new Error(`Campo de payload inválido: ${field}`);
       }
 
-      result[key] = value;
+      payload[key] = value;
     }
 
-    return result;
+    return payload;
   }
 
-    public static serialize(response: Response): string {
-        return `${response.id}|${response.type}|${response.payload}`;
-    }
+  public static serialize(response: Response): string {
+    return `${response.id}|${response.type}|${response.payload}`;
+  }
 }

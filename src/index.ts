@@ -21,6 +21,7 @@ const server = net.createServer((socket: net.Socket) => {
             routes.handle(request, socket);
             
         } catch (error) {
+            console.log("Erro ao processar requisição:", error);
             return ErrorHandler.handle("Erro ao processar requisição", socket);
         }
 
@@ -31,6 +32,6 @@ const server = net.createServer((socket: net.Socket) => {
     });
 });
 
-server.listen(4000, () => {
-    console.log('Servidor de processamento rodando na porta 4000');
+server.listen(5000, () => {
+    console.log('Servidor de processamento rodando na porta 5000');
 });

@@ -4,36 +4,34 @@ import { RegistryInstance } from '../entity/Registry';
 import { InstanceStatus } from "@/infra/database/generated/enums";
 
 export class RegistryRepositoryImpl implements IRegistryRepository {
-    public async createRegistry(target:string, instanceName:string): Promise<any> {
+    public async createRegistry(registry: Omit<RegistryInstance, 'id'| 'status' | 'createdAt'>): Promise<any> {
         return await prismaClient.registryInstance.create({
             data: {
-                target,
-                instanceName
+                target: registry.target,
+                instanceName: registry.instanceName
             }
         });
     }
     
-    public async updateRegistry(id: string, target:string, instanceName:string, status:InstanceStatus): Promise<any> {
+    public async updateRegistry(registry: Omit<RegistryInstance, 'target'| 'instanceName' | 'createdAt'>): Promise<any> {
         return await prismaClient.registryInstance.update({
-            where: { id },
+            where: { id: registry.id },
             data: {
-                target,
-                instanceName,
-                status
+                status: registry.status,
             }
         });
     }
 
-    public async deleteRegistry(id: string): Promise<void> {
+    public async deleteRegistry(registry: Omit<RegistryInstance, 'target'| 'instanceName' | 'createdAt' | 'status'>): Promise<void> {
         await prismaClient.registryInstance.delete({
-            where: { id }
+            where: { id:registry.id }
         });
     }
 
-    public async findByTarget(target: string): Promise<Array<RegistryInstance>> {
+    public async findByTarget(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status'>): Promise<Array<RegistryInstance>> {
         return await prismaClient.registryInstance.findMany({
             where: {
-                target: target,
+                target: registry.target,
                 status: InstanceStatus.ACTIVE
             }
         });
