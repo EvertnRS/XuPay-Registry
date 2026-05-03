@@ -1,6 +1,6 @@
-import { MessageBody } from "@/@types/contracts/MessageBody";
 import { Socket } from "net";
 import { IRegistryRepository } from "../domain/repository/IRegistryRepository";
+import { InstanceStatus } from "@/infra/database/generated/enums";
 import { ResponseParser } from "@/infra/parser/ResponseParser";
 import { ErrorHandler } from "@/infra/middleware/Error";
 
@@ -10,13 +10,9 @@ export class RegistryService {
         private registryRepository: IRegistryRepository
     ) {}
 
-    public async getRegistries(messageBody: MessageBody, socket: Socket): Promise<void> {
-        if (!messageBody.payload || typeof messageBody.payload === "string") {
-            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
-        }
-
+    public async getRegistries(service: string, socket: Socket): Promise<void> {
         const registries = await this.registryRepository.findByService({
-            service: messageBody.payload.service
+            service: service
         });
         if (registries.length === 0) {
             return ErrorHandler.handle("Nenhum registro encontrado para o serviço especificado", socket);
@@ -41,61 +37,54 @@ export class RegistryService {
         socket.end();
     }
 
-    public async createRegistry(messageBody: MessageBody,  socket: Socket): Promise<void> {
-        if (!messageBody.payload || typeof messageBody.payload === "string") {
-            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
-        }
-
-        if (!messageBody.payload.instanceName) {
+    public async createRegistry(instanceName: string, service: string, socket: Socket): Promise<void> {
+        if (!instanceName) {
             return ErrorHandler.handle("Nome de instância para essa rota é obrigatório", socket);
         }
         
         await this.registryRepository.createRegistry({
-            service: messageBody.payload.service,
-            instanceName: messageBody.payload.instanceName
+            service: service,
+            instanceName: instanceName
         });
 
         socket.write("Registro criado com sucesso");
         socket.end();
     }
 
-    public async updateRegistry(messageBody: MessageBody, socket: Socket): Promise<void> {
-        if (!messageBody.payload || typeof messageBody.payload === "string") {
-            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
-        }
-
-        if (!messageBody.payload.id) {
+    public async updateRegistry(id: string, status: string, socket: Socket): Promise<void> {
+        if (!id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
-        
-        if (!messageBody.payload.instanceName) {
-            return ErrorHandler.handle("Nome de instância para essa rota é obrigatório", socket);
+
+        if (!status) {
+            return ErrorHandler.handle("Status de instância para essa rota é obrigatório", socket);
         }
 
-        if (!messageBody.payload.status) {
-            return ErrorHandler.handle("Status de instância para essa rota é obrigatório", socket);
+        const parsedStatus = status as InstanceStatus;
+
+        if (!Object.values(InstanceStatus).includes(parsedStatus)) {
+            return ErrorHandler.handle(
+            `Status inválido: ${status}. Valores aceitos: ${Object.values(InstanceStatus).join(", ")}`,
+            socket
+            );
         }
         
         await this.registryRepository.updateRegistry({
-            id: messageBody.payload.id,
-            status: messageBody.payload.status
+            id: id,
+            status: parsedStatus
         });
 
         socket.write("Registro atualizado com sucesso");
         socket.end();
     }
 
-    public async deleteRegistry(messageBody: MessageBody, socket: Socket): Promise<void> {
-        if (!messageBody.payload || typeof messageBody.payload === "string") {
-            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
-        }
-
-        if (!messageBody.payload.id) {
+    public async deleteRegistry(id: string, socket: Socket): Promise<void> {
+        if (!id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
 
         await this.registryRepository.deleteRegistry({
-            id: messageBody.payload.id
+            id
         });
 
         socket.write("Registro deletado com sucesso");

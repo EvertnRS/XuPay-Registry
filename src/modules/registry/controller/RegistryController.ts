@@ -13,7 +13,11 @@ export class RegistryController {
             return ErrorHandler.handle("Corpo da requisição é inválido", socket);
         }
 
-        this.registryService.getRegistries(messageBody, socket);
+        if(messageBody.payload.kind !== 'GET_REGISTRY_PAYLOAD') {
+            return ErrorHandler.handle("Campo 'service' é obrigatório para essa rota", socket);
+        }
+
+        this.registryService.getRegistries(messageBody.payload.service, socket);
     }
 
     public createRegistry(request: Request, socket: Socket): void {
@@ -22,8 +26,12 @@ export class RegistryController {
         if (!messageBody) {
             return ErrorHandler.handle("Corpo da requisição é inválido", socket);
         }
+
+        if(messageBody.payload.kind !== 'CREATE_REGISTRY_PAYLOAD') {
+            return ErrorHandler.handle("Campo 'service' é obrigatório para essa rota", socket);
+        }
         
-        this.registryService.createRegistry(messageBody, socket);
+        this.registryService.createRegistry(messageBody.payload.instanceName, messageBody.payload.service, socket);
     }
 
         public deleteRegistry(request: Request, socket: Socket): void {
@@ -32,8 +40,12 @@ export class RegistryController {
         if (!messageBody) {
             return ErrorHandler.handle("Corpo da requisição é inválido", socket);
         }
+
+        if(messageBody.payload.kind !== 'DELETE_REGISTRY_PAYLOAD') {
+            return ErrorHandler.handle("Campo 'service' é obrigatório para essa rota", socket);
+        }
         
-        this.registryService.deleteRegistry(messageBody, socket);
+        this.registryService.deleteRegistry(messageBody.payload.id, socket);
     }
 
     public updateRegistry(request: Request, socket: Socket): void {
@@ -43,6 +55,10 @@ export class RegistryController {
             return ErrorHandler.handle("Corpo da requisição é inválido", socket);
         }
         
-        this.registryService.updateRegistry(messageBody, socket);
+        if(messageBody.payload.kind !== 'UPDATE_REGISTRY_PAYLOAD') {
+            return ErrorHandler.handle("Campo 'service' é obrigatório para essa rota", socket);
+        }
+
+        this.registryService.updateRegistry(messageBody.payload.id, messageBody.payload.status, socket);
     }
 }
