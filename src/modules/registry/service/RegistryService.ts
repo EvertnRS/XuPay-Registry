@@ -11,6 +11,10 @@ export class RegistryService {
     ) {}
 
     public async getRegistries(messageBody: MessageBody, socket: Socket): Promise<void> {
+        if (!messageBody.payload || typeof messageBody.payload === "string") {
+            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
+        }
+
         const registries = await this.registryRepository.findByTarget({
             target: messageBody.payload.target
         });
@@ -19,21 +23,29 @@ export class RegistryService {
         }
 
         const payload = registries.map(registry => {
-            return `${registry.target},${registry.status},${registry.instanceName}`;
+            return `id=${registry.id},target=${registry.target},instanceName=${registry.instanceName},status=${registry.status}`;
         });
 
         const response = ResponseParser.serialize({
-            id: "RegistryService",
-            type: "response",
-            payload: payload.join(',')
+            method: "GET",
+            path: "/service",
+            body: {
+                source: "REGISTRY_SERVICE",
+                type: "RESPONSE",
+                payload: payload.join('&'),
+                timestamp: new Date().toISOString()
+            }
         });
-
 
         socket.write(response);
         socket.end();
     }
 
     public async createRegistry(messageBody: MessageBody,  socket: Socket): Promise<void> {
+        if (!messageBody.payload || typeof messageBody.payload === "string") {
+            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
+        }
+
         if (!messageBody.payload.instanceName) {
             return ErrorHandler.handle("Nome de instância para essa rota é obrigatório", socket);
         }
@@ -48,6 +60,10 @@ export class RegistryService {
     }
 
     public async updateRegistry(messageBody: MessageBody, socket: Socket): Promise<void> {
+        if (!messageBody.payload || typeof messageBody.payload === "string") {
+            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
+        }
+
         if (!messageBody.payload.id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
@@ -70,6 +86,10 @@ export class RegistryService {
     }
 
     public async deleteRegistry(messageBody: MessageBody, socket: Socket): Promise<void> {
+        if (!messageBody.payload || typeof messageBody.payload === "string") {
+            return ErrorHandler.handle("Payload ausente ou em formato inválido", socket);
+        }
+
         if (!messageBody.payload.id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }

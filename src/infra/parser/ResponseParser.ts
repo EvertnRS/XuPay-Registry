@@ -89,6 +89,6 @@ export class ResponseParser {
   }
 
   public static serialize(response: Response): string {
-    return `${response.id}|${response.type}|${response.payload}`;
-  }
+        return `${response.method}|${response.path}|${response.body.source};${response.body.type};${response.body.payload};${response.body.timestamp}`;
+    }
 }

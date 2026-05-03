@@ -1,5 +1,7 @@
+import { MessageBody } from "./MessageBody";
+
 export type Response = {
-  id: string;
-  type: string;
-  payload: string;
+  method: string;
+  path: string;
+  body: MessageBody;
 };
