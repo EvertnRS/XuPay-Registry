@@ -7,5 +7,4 @@ export type Payload = CreateRegistryPayload | GetRegistryPayload | UpdateRegistr
 
 export type MessageBody = {
     payload: Payload;
-    timestamp: string;
 };

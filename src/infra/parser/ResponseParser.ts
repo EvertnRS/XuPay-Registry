@@ -113,7 +113,6 @@ export class ResponseParser {
   ): Request["body"] {
     return {
       payload: this.parsePayloadByPath(path, body),
-      timestamp: this.requiredString(body.timestamp, "timestamp"),
     };
   }
 

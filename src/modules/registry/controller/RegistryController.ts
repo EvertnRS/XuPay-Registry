@@ -10,12 +10,16 @@ import { UpdateRegistryPayload } from "@/@types/contracts/payload/UpdateRegistry
 
 export class RegistryController {
     constructor(private registryService: RegistryService) {}
+
     public getRegistries(request: Request, socket: Socket): void {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
+            console.log("Invalid request body:", request.body);
             return ErrorHandler.handle("Corpo da requisição inválido", socket);      
         }
+
+        console.log("Valid request body:", validRequest.body);
 
         const payload = validRequest.body.payload;
 

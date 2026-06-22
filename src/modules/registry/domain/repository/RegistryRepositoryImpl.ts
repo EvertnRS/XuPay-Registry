@@ -8,7 +8,8 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
         return await prismaClient.registryInstance.create({
             data: {
                 event: registry.event,
-                instanceName: registry.instanceName
+                instanceName: registry.instanceName,
+                path: registry.path
             }
         });
     }
