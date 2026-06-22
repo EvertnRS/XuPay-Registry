@@ -5,49 +5,62 @@ import { ResponseParser } from "@/infra/parser/ResponseParser";
 import { ErrorHandler } from "@/infra/middleware/Error";
 
 export class RegistryService {
-
     constructor(
         private registryRepository: IRegistryRepository
     ) {}
 
-    public async getRegistries(service: string, socket: Socket): Promise<void> {
-        const registries = await this.registryRepository.findByService({
-            service: service
+    public async getRegistries(event: string, socket: Socket): Promise<void> {
+        const registries = await this.registryRepository.findByEvent({
+            event
         });
+
         if (registries.length === 0) {
-            return ErrorHandler.handle("Nenhum registro encontrado para o serviço especificado", socket);
+            return ErrorHandler.handle("Nenhum registro encontrado para o evento especificado", socket);
         }
 
-        const payload = registries.map(registry => {
-            return `id=${registry.id},service=${registry.service},instanceName=${registry.instanceName},status=${registry.status}`;
-        });
+        const responseBody = {
+            registries: 
+                registries.map(registry => {
+                    return {
+                        id: registry.id,
+                        event: registry.event,
+                        instanceName: registry.instanceName,
+                        status: registry.status,
+                        path: registry.path,
+                        createdAt: new Date(registry.createdAt).toISOString()
+                    }
+                }
+            )
+        };
 
-        const response = ResponseParser.serialize({
-            method: "GET",
-            path: "instance",
-            body: {
-                source: "REGISTRY_SERVICE",
-                type: "RESPONSE",
-                payload: payload.join('&'),
-                timestamp: new Date().toISOString()
-            }
-        });
+        const response = ResponseParser.serializeResponse(200, responseBody);
 
         socket.write(response);
         socket.end();
     }
 
-    public async createRegistry(instanceName: string, service: string, socket: Socket): Promise<void> {
-        if (!instanceName) {
-            return ErrorHandler.handle("Nome de instância para essa rota é obrigatório", socket);
+    public async createRegistry(instanceName: string, event: string, path: string, socket: Socket): Promise<void> {
+        if (!instanceName || !event || !path) {
+            return ErrorHandler.handle("Todos os campos são obrigatórios", socket);
         }
         
-        await this.registryRepository.createRegistry({
-            service: service,
-            instanceName: instanceName
+        const createdRegistry = await this.registryRepository.createRegistry({
+            event,
+            instanceName,
+            path
         });
 
-        socket.write("Registro criado com sucesso");
+        const responseBody = {
+            id: createdRegistry.id,
+            event: createdRegistry.event,
+            instanceName: createdRegistry.instanceName,
+            status: createdRegistry.status,
+            path: createdRegistry.path,
+            createdAt: new Date(createdRegistry.createdAt).toISOString()
+        };
+
+        const response = ResponseParser.serializeResponse(201, responseBody);
+        socket.write(response);
         socket.end();
     }
 
@@ -69,12 +82,23 @@ export class RegistryService {
             );
         }
         
-        await this.registryRepository.updateRegistry({
+        const updatedRegistry = await this.registryRepository.updateRegistry({
             id: id,
             status: parsedStatus
         });
 
-        socket.write("Registro atualizado com sucesso");
+        const responseBody = {
+            id: updatedRegistry.id,
+            event: updatedRegistry.event,
+            instanceName: updatedRegistry.instanceName,
+            status: updatedRegistry.status,
+            path: updatedRegistry.path,
+            createdAt: new Date(updatedRegistry.createdAt).toISOString()
+        };
+
+        const response = ResponseParser.serializeResponse(200, responseBody);
+
+        socket.write(response);
         socket.end();
     }
 
@@ -87,7 +111,8 @@ export class RegistryService {
             id
         });
 
-        socket.write("Registro deletado com sucesso");
+        const response = ResponseParser.serializeResponse(204, {});
+        socket.write(response);
         socket.end();
     }
 }

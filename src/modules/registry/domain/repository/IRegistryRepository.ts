@@ -1,9 +1,9 @@
 import { RegistryInstance } from "../entity/Registry";
 
 export interface IRegistryRepository {
-  createRegistry(registry: Omit<RegistryInstance, 'id'| 'status' | 'createdAt'>): Promise<void>;
-  updateRegistry(egistry: Omit<RegistryInstance, 'service'| 'instanceName' | 'createdAt'>): Promise<any>;
-  deleteRegistry(registry: Omit<RegistryInstance, 'service'| 'instanceName' | 'createdAt' | 'status'>): Promise<void>;
+  createRegistry(registry: Omit<RegistryInstance, 'id'| 'status' | 'createdAt'>): Promise<RegistryInstance>;
+  updateRegistry(egistry: Omit<RegistryInstance, 'event'| 'instanceName' | 'path' | 'createdAt'>): Promise<RegistryInstance>;
+  deleteRegistry(registry: Omit<RegistryInstance, 'event'| 'instanceName' | 'createdAt' | 'status' | 'path'>): Promise<void>;
 
-  findByService(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status'>): Promise<Array<RegistryInstance>>;
+  findByEvent(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status' | 'path'>): Promise<Array<RegistryInstance>>;
 }
