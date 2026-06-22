@@ -12,8 +12,6 @@ const server = net.createServer((socket: net.Socket) => {
         console.log('Recebido');
         const rawRequest = data.toString();
 
-        console.log('Raw request:', rawRequest);
-
         try{
             const request = ResponseParser.deserialize(rawRequest);
 

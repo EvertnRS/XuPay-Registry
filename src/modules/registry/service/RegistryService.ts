@@ -15,7 +15,6 @@ export class RegistryService {
         });
 
         if (registries.length === 0) {
-            console.log("No registries found for event:", event);
             return ErrorHandler.handle("Nenhum registro encontrado para o evento especificado", socket);
         }
 
@@ -35,7 +34,7 @@ export class RegistryService {
         };
 
         const response = ResponseParser.serializeResponse(200, responseBody);
-        
+
         socket.write(response);
         socket.end();
     }

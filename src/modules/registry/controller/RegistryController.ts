@@ -19,8 +19,6 @@ export class RegistryController {
             return ErrorHandler.handle("Corpo da requisição inválido", socket);      
         }
 
-        console.log("Valid request body:", validRequest.body);
-
         const payload = validRequest.body.payload;
 
         const { event } = payload as GetRegistryPayload;
