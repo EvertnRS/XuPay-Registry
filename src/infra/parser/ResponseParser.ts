@@ -8,7 +8,7 @@ import type { GetRegistryPayload } from "@/@types/contracts/payload/GetRegistryP
 import type { UpdateRegistryPayload } from "@/@types/contracts/payload/UpdateRegistryPayload";
 import type { DeleteRegistryPayload } from "@/@types/contracts/payload/DeleteRegistryPayload";
 
-import type { JsonValue } from "@/@types/contracts/MessagePayload";
+import type { JsonValue } from "@/@types/contracts/JsonValue";
 import { JsonCodec } from "./JsonCodec";
 import type { JsonObject } from "./JsonCodec";
 import { InstanceStatus } from "../database/generated/browser";
