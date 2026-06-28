@@ -6,5 +6,6 @@ export type UpdateRegistryPayload = PayloadBase & {
   id: string;
   ip: string;
   port: number;
+  path: string;
   status: InstanceStatus;
 };

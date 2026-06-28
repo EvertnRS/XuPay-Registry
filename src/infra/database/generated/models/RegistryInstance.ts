@@ -41,6 +41,7 @@ export type RegistryInstanceMinAggregateOutputType = {
   status: $Enums.InstanceStatus | null
   ip: string | null
   port: number | null
+  path: string | null
   lastHeartBeat: Date | null
   createdAt: Date | null
 }
@@ -52,6 +53,7 @@ export type RegistryInstanceMaxAggregateOutputType = {
   status: $Enums.InstanceStatus | null
   ip: string | null
   port: number | null
+  path: string | null
   lastHeartBeat: Date | null
   createdAt: Date | null
 }
@@ -63,6 +65,7 @@ export type RegistryInstanceCountAggregateOutputType = {
   status: number
   ip: number
   port: number
+  path: number
   lastHeartBeat: number
   createdAt: number
   _all: number
@@ -84,6 +87,7 @@ export type RegistryInstanceMinAggregateInputType = {
   status?: true
   ip?: true
   port?: true
+  path?: true
   lastHeartBeat?: true
   createdAt?: true
 }
@@ -95,6 +99,7 @@ export type RegistryInstanceMaxAggregateInputType = {
   status?: true
   ip?: true
   port?: true
+  path?: true
   lastHeartBeat?: true
   createdAt?: true
 }
@@ -106,6 +111,7 @@ export type RegistryInstanceCountAggregateInputType = {
   status?: true
   ip?: true
   port?: true
+  path?: true
   lastHeartBeat?: true
   createdAt?: true
   _all?: true
@@ -204,6 +210,7 @@ export type RegistryInstanceGroupByOutputType = {
   status: $Enums.InstanceStatus
   ip: string
   port: number
+  path: string
   lastHeartBeat: Date
   createdAt: Date
   _count: RegistryInstanceCountAggregateOutputType | null
@@ -238,6 +245,7 @@ export type RegistryInstanceWhereInput = {
   status?: Prisma.EnumInstanceStatusFilter<"RegistryInstance"> | $Enums.InstanceStatus
   ip?: Prisma.StringFilter<"RegistryInstance"> | string
   port?: Prisma.IntFilter<"RegistryInstance"> | number
+  path?: Prisma.StringFilter<"RegistryInstance"> | string
   lastHeartBeat?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
 }
@@ -249,6 +257,7 @@ export type RegistryInstanceOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   port?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lastHeartBeat?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -263,6 +272,7 @@ export type RegistryInstanceWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumInstanceStatusFilter<"RegistryInstance"> | $Enums.InstanceStatus
   ip?: Prisma.StringFilter<"RegistryInstance"> | string
   port?: Prisma.IntFilter<"RegistryInstance"> | number
+  path?: Prisma.StringFilter<"RegistryInstance"> | string
   lastHeartBeat?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"RegistryInstance"> | Date | string
 }, "id" | "instanceName">
@@ -274,6 +284,7 @@ export type RegistryInstanceOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   port?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lastHeartBeat?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.RegistryInstanceCountOrderByAggregateInput
@@ -293,6 +304,7 @@ export type RegistryInstanceScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumInstanceStatusWithAggregatesFilter<"RegistryInstance"> | $Enums.InstanceStatus
   ip?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
   port?: Prisma.IntWithAggregatesFilter<"RegistryInstance"> | number
+  path?: Prisma.StringWithAggregatesFilter<"RegistryInstance"> | string
   lastHeartBeat?: Prisma.DateTimeWithAggregatesFilter<"RegistryInstance"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RegistryInstance"> | Date | string
 }
@@ -304,6 +316,7 @@ export type RegistryInstanceCreateInput = {
   status?: $Enums.InstanceStatus
   ip: string
   port: number
+  path: string
   lastHeartBeat: Date | string
   createdAt?: Date | string
 }
@@ -315,6 +328,7 @@ export type RegistryInstanceUncheckedCreateInput = {
   status?: $Enums.InstanceStatus
   ip: string
   port: number
+  path: string
   lastHeartBeat: Date | string
   createdAt?: Date | string
 }
@@ -326,6 +340,7 @@ export type RegistryInstanceUpdateInput = {
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   ip?: Prisma.StringFieldUpdateOperationsInput | string
   port?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
   lastHeartBeat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -337,6 +352,7 @@ export type RegistryInstanceUncheckedUpdateInput = {
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   ip?: Prisma.StringFieldUpdateOperationsInput | string
   port?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
   lastHeartBeat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -348,6 +364,7 @@ export type RegistryInstanceCreateManyInput = {
   status?: $Enums.InstanceStatus
   ip: string
   port: number
+  path: string
   lastHeartBeat: Date | string
   createdAt?: Date | string
 }
@@ -359,6 +376,7 @@ export type RegistryInstanceUpdateManyMutationInput = {
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   ip?: Prisma.StringFieldUpdateOperationsInput | string
   port?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
   lastHeartBeat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -370,6 +388,7 @@ export type RegistryInstanceUncheckedUpdateManyInput = {
   status?: Prisma.EnumInstanceStatusFieldUpdateOperationsInput | $Enums.InstanceStatus
   ip?: Prisma.StringFieldUpdateOperationsInput | string
   port?: Prisma.IntFieldUpdateOperationsInput | number
+  path?: Prisma.StringFieldUpdateOperationsInput | string
   lastHeartBeat?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,6 +400,7 @@ export type RegistryInstanceCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   port?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lastHeartBeat?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -396,6 +416,7 @@ export type RegistryInstanceMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   port?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lastHeartBeat?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -407,6 +428,7 @@ export type RegistryInstanceMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   ip?: Prisma.SortOrder
   port?: Prisma.SortOrder
+  path?: Prisma.SortOrder
   lastHeartBeat?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -444,6 +466,7 @@ export type RegistryInstanceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   status?: boolean
   ip?: boolean
   port?: boolean
+  path?: boolean
   lastHeartBeat?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["registryInstance"]>
@@ -455,6 +478,7 @@ export type RegistryInstanceSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   status?: boolean
   ip?: boolean
   port?: boolean
+  path?: boolean
   lastHeartBeat?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["registryInstance"]>
@@ -466,6 +490,7 @@ export type RegistryInstanceSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   status?: boolean
   ip?: boolean
   port?: boolean
+  path?: boolean
   lastHeartBeat?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["registryInstance"]>
@@ -477,11 +502,12 @@ export type RegistryInstanceSelectScalar = {
   status?: boolean
   ip?: boolean
   port?: boolean
+  path?: boolean
   lastHeartBeat?: boolean
   createdAt?: boolean
 }
 
-export type RegistryInstanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "event" | "instanceName" | "status" | "ip" | "port" | "lastHeartBeat" | "createdAt", ExtArgs["result"]["registryInstance"]>
+export type RegistryInstanceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "event" | "instanceName" | "status" | "ip" | "port" | "path" | "lastHeartBeat" | "createdAt", ExtArgs["result"]["registryInstance"]>
 
 export type $RegistryInstancePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RegistryInstance"
@@ -493,9 +519,7 @@ export type $RegistryInstancePayload<ExtArgs extends runtime.Types.Extensions.In
     status: $Enums.InstanceStatus
     ip: string
     port: number
-    /**
-     * path String trocado por ip e porta
-     */
+    path: string
     lastHeartBeat: Date
     createdAt: Date
   }, ExtArgs["result"]["registryInstance"]>
@@ -927,6 +951,7 @@ export interface RegistryInstanceFieldRefs {
   readonly status: Prisma.FieldRef<"RegistryInstance", 'InstanceStatus'>
   readonly ip: Prisma.FieldRef<"RegistryInstance", 'String'>
   readonly port: Prisma.FieldRef<"RegistryInstance", 'Int'>
+  readonly path: Prisma.FieldRef<"RegistryInstance", 'String'>
   readonly lastHeartBeat: Prisma.FieldRef<"RegistryInstance", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"RegistryInstance", 'DateTime'>
 }

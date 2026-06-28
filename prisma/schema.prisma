@@ -25,7 +25,7 @@ model RegistryInstance {
   status     InstanceStatus @default(ACTIVE)
   ip         String
   port       Int
-  /// path String trocado por ip e porta
+  path String
   lastHeartBeat DateTime
   createdAt  DateTime @default(now())
 }

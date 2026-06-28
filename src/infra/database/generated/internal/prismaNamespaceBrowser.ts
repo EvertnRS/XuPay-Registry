@@ -77,6 +77,7 @@ export const RegistryInstanceScalarFieldEnum = {
   status: 'status',
   ip: 'ip',
   port: 'port',
+  path: 'path',
   lastHeartBeat: 'lastHeartBeat',
   createdAt: 'createdAt'
 } as const

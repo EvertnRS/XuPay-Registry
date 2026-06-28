@@ -27,6 +27,7 @@ export class RegistryService {
                         status: registry.status,
                         ip: registry.ip,
                         port: registry.port,
+                        path: registry.path,
                         createdAt: new Date(registry.createdAt).toISOString()
                     }
                 }
@@ -40,9 +41,8 @@ export class RegistryService {
     }
 
     // FIX: troquei o create por registerInstance
-    public async registerInstance(instanceName: string, event: string, port: number, socket: Socket): Promise<void> {
-        console.log(`Registering instance: ${instanceName}, event: ${event}, port: ${port}`);
-        if (!instanceName || !event || !port) {
+    public async registerInstance(instanceName: string, event: string, path: string, port: number, socket: Socket): Promise<void> {
+        if (!instanceName || !event || !path || !port) {
             return ErrorHandler.handle("Todos os campos são obrigatórios", socket);
         }
         const ip = socket.remoteAddress;
@@ -69,6 +69,7 @@ export class RegistryService {
                 existingRegistry.id, 
                 ip,
                 port,
+                path,
                 InstanceStatus.ACTIVE,
                 new Date()
             );
@@ -78,6 +79,7 @@ export class RegistryService {
                 event,
                 ip,
                 port,
+                path,
                 status: InstanceStatus.ACTIVE,
                 lastHeartbeat: new Date()
             });
@@ -91,6 +93,7 @@ export class RegistryService {
             status: registryInstance.status,
             ip: registryInstance.ip,
             port: registryInstance.port,
+            path: registryInstance.path,
             createdAt: registryInstance.createdAt.toISOString()
         });
 
@@ -98,7 +101,7 @@ export class RegistryService {
         socket.end();
     }   
 
-    public async updateRegistry(id: string, ip: string, port: number, status: InstanceStatus, socket: Socket): Promise<void> {
+    public async updateRegistry(id: string, ip: string, port: number, path: string, status: InstanceStatus, socket: Socket): Promise<void> {
         if (!id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
@@ -133,6 +136,7 @@ export class RegistryService {
             id,
             ip,
             port,
+            path,
             parsedStatus,
             new Date()
         );
@@ -163,11 +167,12 @@ export class RegistryService {
         socket.end();
     }
 
-    private async updateRegistration(id: string, ip: string, port: number, status: InstanceStatus, lastHeartbeat: Date): Promise<RegistryInstance> {
+    private async updateRegistration(id: string, ip: string, port: number, path: string, status: InstanceStatus, lastHeartbeat: Date): Promise<RegistryInstance> {
         return await this.registryRepository.updateRegistry({
             id: id,
             ip: ip,
             port: port,
+            path: path,
             status: status,
             lastHeartbeat: lastHeartbeat
         });

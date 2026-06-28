@@ -50,9 +50,9 @@ export class RegistryController {
         
         const payload = validRequest.body.payload;
 
-        const { instanceName, event, port } = payload as RegisterInstancePayload;
+        const { instanceName, event, path, port } = payload as RegisterInstancePayload;
 
-        this.registryService.registerInstance(instanceName, event, port, socket);
+        this.registryService.registerInstance(instanceName, event, path, port, socket);
     }
 
     public deleteRegistry(request: Request, socket: Socket): void {
@@ -78,8 +78,8 @@ export class RegistryController {
         
         const payload = validRequest.body.payload;
 
-        const { id, ip, port, status } = payload as UpdateRegistryPayload;
+        const { id, ip, port, status, path } = payload as UpdateRegistryPayload;
 
-        this.registryService.updateRegistry(id, ip, port, status, socket);
+        this.registryService.updateRegistry(id, ip, port, path, status, socket);
     }
 }

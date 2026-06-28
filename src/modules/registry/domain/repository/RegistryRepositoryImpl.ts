@@ -23,6 +23,7 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
                 event: data.event,
                 ip: data.ip,
                 port: data.port,
+                path: data.path,
                 status: data.status,
                 lastHeartBeat: data.lastHeartbeat
             }

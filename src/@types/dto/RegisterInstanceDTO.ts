@@ -5,6 +5,7 @@ export type RegisterInstanceDTO = {
     event: string;
     ip: string;
     port: number;
+    path: string;
     status: InstanceStatus;
     lastHeartbeat: Date;
 };

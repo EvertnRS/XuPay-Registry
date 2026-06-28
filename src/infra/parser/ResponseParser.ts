@@ -167,6 +167,7 @@ export class ResponseParser {
       kind: "REGISTER_INSTANCE_PAYLOAD",
       event: this.requiredString(payload.event, "event"),
       instanceName: this.requiredString(payload.instanceName, "instanceName"),
+      path: this.requiredString(payload.path, "path"),
       port: this.requiredNumber(payload.port, "port"),
     };
   }
@@ -183,6 +184,7 @@ export class ResponseParser {
       id: this.requiredString(payload.id, "id"),
       ip: this.requiredString(payload.ip, "ip"),
       port: this.requiredNumber(payload.port, "port"),
+      path: this.requiredString(payload.path, "path"),
       status: payload.status as InstanceStatus,
     };
   }

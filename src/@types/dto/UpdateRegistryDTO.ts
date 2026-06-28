@@ -4,6 +4,7 @@ export type UpdateRegistryDTO = {
     id: string;
     ip: string;
     port: number;
+    path: string;
     status: InstanceStatus;
     lastHeartbeat: Date;
 }
