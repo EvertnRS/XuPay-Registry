@@ -3,6 +3,7 @@ import { IRegistryRepository } from "../domain/repository/IRegistryRepository";
 import { InstanceStatus } from "@/infra/database/generated/enums";
 import { ResponseParser } from "@/infra/parser/ResponseParser";
 import { ErrorHandler } from "@/infra/middleware/Error";
+import { RegistryInstance } from "../domain/entity/Registry";
 
 export class RegistryService {
     constructor(
@@ -10,9 +11,7 @@ export class RegistryService {
     ) {}
 
     public async getRegistries(event: string, socket: Socket): Promise<void> {
-        const registries = await this.registryRepository.findByEvent({
-            event
-        });
+        const registries = await this.registryRepository.findByEvent(event);
 
         if (registries.length === 0) {
             return ErrorHandler.handle("Nenhum registro encontrado para o evento especificado", socket);
@@ -26,7 +25,8 @@ export class RegistryService {
                         event: registry.event,
                         instanceName: registry.instanceName,
                         status: registry.status,
-                        path: registry.path,
+                        ip: registry.ip,
+                        port: registry.port,
                         createdAt: new Date(registry.createdAt).toISOString()
                     }
                 }
@@ -39,38 +39,76 @@ export class RegistryService {
         socket.end();
     }
 
-    public async createRegistry(instanceName: string, event: string, path: string, socket: Socket): Promise<void> {
-        if (!instanceName || !event || !path) {
+    // FIX: troquei o create por registerInstance
+    public async registerInstance(instanceName: string, event: string, port: number, socket: Socket): Promise<void> {
+        console.log(`Registering instance: ${instanceName}, event: ${event}, port: ${port}`);
+        if (!instanceName || !event || !port) {
             return ErrorHandler.handle("Todos os campos são obrigatórios", socket);
         }
+        const ip = socket.remoteAddress;
+
+        if (!ip) {
+            return ErrorHandler.handle("Não foi possível obter o endereço IP do cliente", socket);
+        }
+
+        const registryOnPort = await this.registryRepository.findByPort(port);
+
+        if (registryOnPort && registryOnPort.instanceName !== instanceName) {
+            return ErrorHandler.handle(
+                `A porta ${port} já está em uso.`,
+                socket
+            );
+        }
+
+        const existingRegistry = await this.registryRepository.findByInstanceName(instanceName);
         
-        const createdRegistry = await this.registryRepository.createRegistry({
-            event,
-            instanceName,
-            path
+        let registryInstance: RegistryInstance;
+
+        if(existingRegistry) {
+            registryInstance = await this.updateRegistration(
+                existingRegistry.id, 
+                ip,
+                port,
+                InstanceStatus.ACTIVE,
+                new Date()
+            );
+        } else {
+            registryInstance = await this.registryRepository.registerInstance({
+                instanceName,
+                event,
+                ip,
+                port,
+                status: InstanceStatus.ACTIVE,
+                lastHeartbeat: new Date()
+            });
+        }
+
+
+        const response = ResponseParser.serializeResponse(200, {
+            id: registryInstance.id,
+            event: registryInstance.event,
+            instanceName: registryInstance.instanceName,
+            status: registryInstance.status,
+            ip: registryInstance.ip,
+            port: registryInstance.port,
+            createdAt: registryInstance.createdAt.toISOString()
         });
 
-        const responseBody = {
-            id: createdRegistry.id,
-            event: createdRegistry.event,
-            instanceName: createdRegistry.instanceName,
-            status: createdRegistry.status,
-            path: createdRegistry.path,
-            createdAt: new Date(createdRegistry.createdAt).toISOString()
-        };
-
-        const response = ResponseParser.serializeResponse(200, responseBody);
         socket.write(response);
         socket.end();
-    }
+    }   
 
-    public async updateRegistry(id: string, status: string, socket: Socket): Promise<void> {
+    public async updateRegistry(id: string, ip: string, port: number, status: InstanceStatus, socket: Socket): Promise<void> {
         if (!id) {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
 
         if (!status) {
             return ErrorHandler.handle("Status de instância para essa rota é obrigatório", socket);
+        }
+
+        if (!ip || !port) {
+            return ErrorHandler.handle("IP e porta de instância para essa rota são obrigatórios", socket);
         }
 
         const parsedStatus = status as InstanceStatus;
@@ -81,22 +119,33 @@ export class RegistryService {
             socket
             );
         }
-        
-        const updatedRegistry = await this.registryRepository.updateRegistry({
-            id: id,
-            status: parsedStatus
-        });
 
-        const responseBody = {
+        const existingRegistry = await this.registryRepository.findByPort(port);
+
+        if (existingRegistry && existingRegistry.id !== id) {
+            return ErrorHandler.handle(
+                `Porta ${port} já está em uso por outra instância. Por favor, escolha uma porta diferente.`,
+                socket
+            );
+        }
+        
+        const updatedRegistry = await this.updateRegistration(
+            id,
+            ip,
+            port,
+            parsedStatus,
+            new Date()
+        );
+
+        const response = ResponseParser.serializeResponse(200, {
             id: updatedRegistry.id,
             event: updatedRegistry.event,
             instanceName: updatedRegistry.instanceName,
             status: updatedRegistry.status,
-            path: updatedRegistry.path,
-            createdAt: new Date(updatedRegistry.createdAt).toISOString()
-        };
-
-        const response = ResponseParser.serializeResponse(200, responseBody);
+            ip: updatedRegistry.ip,
+            port: updatedRegistry.port,
+            createdAt: updatedRegistry.createdAt.toISOString()
+        });
 
         socket.write(response);
         socket.end();
@@ -107,12 +156,20 @@ export class RegistryService {
             return ErrorHandler.handle("Id de registro para essa rota é obrigatório", socket);
         }
 
-        await this.registryRepository.deleteRegistry({
-            id
-        });
+        await this.registryRepository.deleteRegistry(id);
 
         const response = ResponseParser.serializeResponse(204, {});
         socket.write(response);
         socket.end();
+    }
+
+    private async updateRegistration(id: string, ip: string, port: number, status: InstanceStatus, lastHeartbeat: Date): Promise<RegistryInstance> {
+        return await this.registryRepository.updateRegistry({
+            id: id,
+            ip: ip,
+            port: port,
+            status: status,
+            lastHeartbeat: lastHeartbeat
+        });
     }
 }

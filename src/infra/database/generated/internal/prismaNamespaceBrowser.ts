@@ -75,7 +75,9 @@ export const RegistryInstanceScalarFieldEnum = {
   event: 'event',
   instanceName: 'instanceName',
   status: 'status',
-  path: 'path',
+  ip: 'ip',
+  port: 'port',
+  lastHeartBeat: 'lastHeartBeat',
   createdAt: 'createdAt'
 } as const
 

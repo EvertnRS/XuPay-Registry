@@ -4,9 +4,9 @@ import {RegistryService} from "../service/RegistryService";
 import { Request } from "@/@types/contracts/Request";
 import { ErrorHandler } from "@/infra/middleware/Error";
 import { GetRegistryPayload } from "@/@types/contracts/payload/GetRegistryPayload";
-import { CreateRegistryPayload } from "@/@types/contracts/payload/CreateRegistryPayload";
 import { DeleteRegistryPayload } from "@/@types/contracts/payload/DeleteRegistryPayload";
 import { UpdateRegistryPayload } from "@/@types/contracts/payload/UpdateRegistryPayload";
+import { RegisterInstancePayload } from "@/@types/contracts/payload/RegisterInstancePayload";
 
 export class RegistryController {
     constructor(private registryService: RegistryService) {}
@@ -26,7 +26,7 @@ export class RegistryController {
         this.registryService.getRegistries(event, socket);
     }
 
-    public createRegistry(request: Request, socket: Socket): void {
+    /*public createRegistry(request: Request, socket: Socket): void {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
@@ -38,9 +38,24 @@ export class RegistryController {
         const { instanceName, event, path } = payload as CreateRegistryPayload;
         
         this.registryService.createRegistry(instanceName, event, path, socket);
+    }*/
+
+
+    public registerInstance(request: Request, socket: Socket): void {
+        const validRequest = isValidRequest(request, socket);
+        
+        if (!validRequest) {
+            return ErrorHandler.handle("Corpo da requisição inválido", socket);      
+        }
+        
+        const payload = validRequest.body.payload;
+
+        const { instanceName, event, port } = payload as RegisterInstancePayload;
+
+        this.registryService.registerInstance(instanceName, event, port, socket);
     }
 
-        public deleteRegistry(request: Request, socket: Socket): void {
+    public deleteRegistry(request: Request, socket: Socket): void {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
@@ -63,8 +78,8 @@ export class RegistryController {
         
         const payload = validRequest.body.payload;
 
-        const { id, status } = payload as UpdateRegistryPayload;
+        const { id, ip, port, status } = payload as UpdateRegistryPayload;
 
-        this.registryService.updateRegistry(id, status, socket);
+        this.registryService.updateRegistry(id, ip, port, status, socket);
     }
 }

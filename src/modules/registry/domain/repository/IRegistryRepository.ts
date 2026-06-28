@@ -1,9 +1,14 @@
+import { UpdateRegistryDTO } from "@/@types/dto/UpdateRegistryDTO";
 import { RegistryInstance } from "../entity/Registry";
+import { RegisterInstanceDTO } from "@/@types/dto/RegisterInstanceDTO";
 
 export interface IRegistryRepository {
-  createRegistry(registry: Omit<RegistryInstance, 'id'| 'status' | 'createdAt'>): Promise<RegistryInstance>;
-  updateRegistry(egistry: Omit<RegistryInstance, 'event'| 'instanceName' | 'path' | 'createdAt'>): Promise<RegistryInstance>;
-  deleteRegistry(registry: Omit<RegistryInstance, 'event'| 'instanceName' | 'createdAt' | 'status' | 'path'>): Promise<void>;
+  //createRegistry(data: CreateRegistryDTO): Promise<RegistryInstance>;
+  registerInstance(data: RegisterInstanceDTO): Promise<RegistryInstance>;
+  updateRegistry(data: UpdateRegistryDTO): Promise<RegistryInstance>;
+  deleteRegistry(id: string): Promise<void>;
 
-  findByEvent(registry: Omit<RegistryInstance, 'id'| 'instanceName' | 'createdAt' | 'status' | 'path'>): Promise<Array<RegistryInstance>>;
+  findByEvent(event: string): Promise<Array<RegistryInstance>>;
+  findByInstanceName(instanceName: string): Promise<RegistryInstance | null>;
+  findByPort(port: number): Promise<RegistryInstance | null>;
 }

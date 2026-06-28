@@ -19,9 +19,8 @@ export class Routes {
     public handle(request: Request, socket: Socket): void {
         if (request.path === "discover" && request.method === "GET") {
             this.registryController.getRegistries(request, socket);
-
-        } else if (request.path === "create" && request.method === "POST") {
-            this.registryController.createRegistry(request, socket);
+        } else if (request.path === "register" && request.method === "POST") {
+            this.registryController.registerInstance(request, socket);
 
         } else if (request.path === "update" && request.method === "PUT") {
             this.registryController.updateRegistry(request, socket);

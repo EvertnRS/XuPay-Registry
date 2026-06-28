@@ -3,7 +3,6 @@ import {
   normalizePath,
 } from "@/@types/contracts/Request";
 import type { Request, RequestHeaders } from "@/@types/contracts/Request";
-import type { CreateRegistryPayload } from "@/@types/contracts/payload/CreateRegistryPayload";
 import type { GetRegistryPayload } from "@/@types/contracts/payload/GetRegistryPayload";
 import type { UpdateRegistryPayload } from "@/@types/contracts/payload/UpdateRegistryPayload";
 import type { DeleteRegistryPayload } from "@/@types/contracts/payload/DeleteRegistryPayload";
@@ -12,12 +11,13 @@ import type { JsonValue } from "@/@types/contracts/JsonValue";
 import { JsonCodec } from "./JsonCodec";
 import type { JsonObject } from "./JsonCodec";
 import { InstanceStatus } from "../database/generated/browser";
+import { RegisterInstancePayload } from "@/@types/contracts/payload/RegisterInstancePayload";
 
 type ParsedPayload =
-  | CreateRegistryPayload
+  | RegisterInstancePayload
   | GetRegistryPayload
   | UpdateRegistryPayload
-  | DeleteRegistryPayload
+  | DeleteRegistryPayload;
 
 type SerializableRequest = {
   method: string;
@@ -126,8 +126,8 @@ export class ResponseParser {
       return this.parseGetPayload(payload);
     }
 
-    if (path === "create") {
-      return this.parseCreatePayload(payload);
+    if (path === "register") {
+      return this.parseRegisterPayload(payload);
     }
 
     if (path === "update") {
@@ -160,14 +160,14 @@ export class ResponseParser {
     };
   }
 
-  private static parseCreatePayload(
+  private static parseRegisterPayload(
     payload: JsonObject
-  ): CreateRegistryPayload {
+  ): RegisterInstancePayload {
     return {
-      kind: "CREATE_REGISTRY_PAYLOAD",
-      event: this.requiredString(payload.service, "event"),
+      kind: "REGISTER_INSTANCE_PAYLOAD",
+      event: this.requiredString(payload.event, "event"),
       instanceName: this.requiredString(payload.instanceName, "instanceName"),
-      path: this.requiredString(payload.path, "path"),
+      port: this.requiredNumber(payload.port, "port"),
     };
   }
 
@@ -181,6 +181,8 @@ export class ResponseParser {
     return {
       kind: "UPDATE_REGISTRY_PAYLOAD",
       id: this.requiredString(payload.id, "id"),
+      ip: this.requiredString(payload.ip, "ip"),
+      port: this.requiredNumber(payload.port, "port"),
       status: payload.status as InstanceStatus,
     };
   }
@@ -203,6 +205,17 @@ export class ResponseParser {
     }
 
     return value.trim();
+  }
+
+  private static requiredNumber(
+    value: JsonValue | undefined,
+    fieldName: string
+  ): number {
+    if (typeof value !== "number") {
+      throw new Error(`Payload inválido. Campo ${fieldName} ausente.`);
+    }
+
+    return value;
   }
 
   private static parseHeaders(headerLines: string[]): RequestHeaders {

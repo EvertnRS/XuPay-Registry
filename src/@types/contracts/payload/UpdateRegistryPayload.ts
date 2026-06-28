@@ -4,5 +4,7 @@ import { InstanceStatus } from "@/infra/database/generated/enums";
 export type UpdateRegistryPayload = PayloadBase & {
   kind: "UPDATE_REGISTRY_PAYLOAD";
   id: string;
+  ip: string;
+  port: number;
   status: InstanceStatus;
 };

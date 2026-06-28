@@ -23,7 +23,10 @@ model RegistryInstance {
   event       String
   instanceName String   @unique
   status     InstanceStatus @default(ACTIVE)
-  path String
+  ip         String
+  port       Int
+  /// path String trocado por ip e porta
+  lastHeartBeat DateTime
   createdAt  DateTime @default(now())
 }
  
