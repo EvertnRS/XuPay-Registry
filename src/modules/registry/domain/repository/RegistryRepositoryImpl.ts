@@ -66,8 +66,8 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
         });
     }
 
-    findByPort(port: number): Promise<RegistryInstance | null> {
-        return prismaClient.registryInstance.findFirst({
+    public async findByPort(port: number): Promise<RegistryInstance | null> {
+        return await prismaClient.registryInstance.findFirst({
             where: {
                 port: port,
                 status: InstanceStatus.ACTIVE
