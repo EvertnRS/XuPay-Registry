@@ -4,11 +4,31 @@ import { InstanceStatus } from "@/infra/database/generated/enums";
 import { ResponseParser } from "@/infra/parser/ResponseParser";
 import { ErrorHandler } from "@/infra/middleware/Error";
 import { RegistryInstance } from "../domain/entity/Registry";
+import { DNSServiceClient } from "./client/DNSServiceClient";
+import { UdpSocketClient } from "@/infra/client/UdpSocketClient";
+
+function parseRequiredPort(value: string | undefined, name: string): number {
+  const parsedPort = Number.parseInt(value ?? "", 10);
+
+  if (!Number.isInteger(parsedPort) || parsedPort < 0 || parsedPort > 65535) {
+    throw new Error(`Invalid or missing port for ${name}`);
+  }
+
+  return parsedPort;
+}
 
 export class RegistryService {
+    private dnsServiceClient: DNSServiceClient;
     constructor(
         private registryRepository: IRegistryRepository
-    ) {}
+    ) {
+        const udpSocketClient = new UdpSocketClient();
+        this.dnsServiceClient = new DNSServiceClient(
+            udpSocketClient,
+            process.env.DNS_SERVICE_HOST || "localhost",
+            parseRequiredPort(process.env.DNS_SERVICE_PORT, "DNS_SERVICE_PORT")
+        );
+    }
 
     public async getRegistries(event: string, socket: Socket): Promise<void> {
         const registries = await this.registryRepository.findByEvent(event);
@@ -82,6 +102,10 @@ export class RegistryService {
                 path,
                 status: InstanceStatus.ACTIVE,
                 lastHeartbeat: new Date()
+            });
+
+            this.dnsServiceClient.create(instanceName, ip).catch((error) => {
+                console.error(`Erro ao criar registro DNS para a instância ${instanceName}:`, error);
             });
         }
 
