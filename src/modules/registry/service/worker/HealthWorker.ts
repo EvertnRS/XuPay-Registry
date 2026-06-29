@@ -15,7 +15,7 @@ export class HealthWorker {
         this.dnsServiceClient = new DNSServiceClient(
             socketClient, 
             process.env.SERVICE_HOST || ' ', 
-            parseInt(process.env.SERVICE_PORT || ' ')
+            process.env.SERVICE_PORT || ' '
         );
 
         this.targetServiceClient = new TargetServiceClient(
@@ -51,7 +51,7 @@ export class HealthWorker {
             }
         }
 
-        setTimeout(() => this.processQueue(), 600000);
+        setTimeout(() => this.processQueue(), 300000);
     }
 
     private async resolveDNS(instanceName: string): Promise<{ host: string; port: string }> {

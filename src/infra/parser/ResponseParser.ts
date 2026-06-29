@@ -197,7 +197,7 @@ export class ResponseParser {
   ): CreateRegistryPayload {
     return {
       kind: "CREATE_REGISTRY_PAYLOAD",
-      event: this.requiredString(payload.service, "event"),
+      event: this.requiredString(payload.event, "event"),
       instanceName: this.requiredString(payload.instanceName, "instanceName"),
       path: this.requiredString(payload.path, "path"),
     };

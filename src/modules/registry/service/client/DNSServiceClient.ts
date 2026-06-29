@@ -2,11 +2,21 @@ import { UdpSocketClient } from "@/infra/client/UdpSocketClient";
 import { ResponseParser } from "@/infra/parser/ResponseParser";
 import type { DNSResolution } from "../../../../@types/clients/DNSResolution";
 
+function parseRequiredPort(value: string | undefined, name: string): number {
+  const parsedPort = Number.parseInt(value ?? "", 10) + 1;
+
+  if (!Number.isInteger(parsedPort) || parsedPort < 0 || parsedPort > 65535) {
+    throw new Error(`Invalid or missing port for ${name}`);
+  }
+
+  return parsedPort;
+}
+
 export class DNSServiceClient {
   constructor(
     private readonly socketClient: UdpSocketClient,
     private readonly dnsHost: string,
-    private readonly dnsPort: number
+    private readonly dnsPort: string
   ) {}
 
   public async resolve(instanceName: string): Promise<DNSResolution> {
@@ -16,7 +26,7 @@ export class DNSServiceClient {
 
     const rawResponse = await this.socketClient.send(
         this.dnsHost,
-        this.dnsPort,
+        parseRequiredPort(this.dnsPort, "DNS"),
         request
     );
 
