@@ -1,7 +1,7 @@
 import { DNSServiceClient } from "@/modules/registry/service/client/DNSServiceClient";
 import { TargetServiceClient } from "@/modules/registry/service/client/TargetServiceClient";
 import { IRegistryRepository } from "../../domain/repository/IRegistryRepository";
-import { SocketClient } from "@/infra/client/TcpSocketClient";
+import { UdpSocketClient } from "@/infra/client/UdpSocketClient";
 
 export class HealthWorker {
     private readonly dnsServiceClient: DNSServiceClient;
@@ -10,7 +10,7 @@ export class HealthWorker {
     constructor(
         private registryRepository: IRegistryRepository
     ) {
-        const socketClient = new SocketClient();
+        const socketClient = new UdpSocketClient();
 
         this.dnsServiceClient = new DNSServiceClient(
             socketClient, 

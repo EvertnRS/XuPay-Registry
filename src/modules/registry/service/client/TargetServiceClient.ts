@@ -1,9 +1,9 @@
 import { ServiceResponse } from "../../../../@types/clients/ServiceResponse";
-import { SocketClient } from "@/infra/client/TcpSocketClient";
+import { UdpSocketClient } from "@/infra/client/UdpSocketClient";
 import { ResponseParser } from "@/infra/parser/ResponseParser";
 
 function parseRequiredPort(value: string | undefined, name: string): number {
-  const parsedPort = Number.parseInt(value ?? "", 10);
+  const parsedPort = Number.parseInt(value ?? "", 10) + 1;
 
   if (!Number.isInteger(parsedPort) || parsedPort < 0 || parsedPort > 65535) {
     throw new Error(`Invalid or missing port for ${name}`);
@@ -14,7 +14,7 @@ function parseRequiredPort(value: string | undefined, name: string): number {
 
 export class TargetServiceClient {
   constructor(
-    private readonly socketClient: SocketClient
+    private readonly socketClient: UdpSocketClient
   ) {}
 
   public async send(params: {
