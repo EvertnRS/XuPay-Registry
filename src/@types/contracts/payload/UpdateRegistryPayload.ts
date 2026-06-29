@@ -1,4 +1,4 @@
-import { PayloadBase } from "./PayloadBase";
+import { PayloadBase } from "../PayloadBase";
 import { InstanceStatus } from "@/infra/database/generated/enums";
 
 export type UpdateRegistryPayload = PayloadBase & {

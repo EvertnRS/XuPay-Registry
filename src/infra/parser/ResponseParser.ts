@@ -12,12 +12,16 @@ import type { JsonValue } from "@/@types/contracts/JsonValue";
 import { JsonCodec } from "./JsonCodec";
 import type { JsonObject } from "./JsonCodec";
 import { InstanceStatus } from "../database/generated/browser";
+import { ServicePayload } from "@/@types/contracts/payload/ServicePayload";
+import { DNSServicePayload } from "@/@types/contracts/payload/DNSServicePayload";
 
 type ParsedPayload =
   | CreateRegistryPayload
   | GetRegistryPayload
   | UpdateRegistryPayload
   | DeleteRegistryPayload
+  | ServicePayload
+  | DNSServicePayload;
 
 type SerializableRequest = {
   method: string;
@@ -122,7 +126,7 @@ export class ResponseParser {
   ): ParsedPayload {
     const payload = this.extractPayloadObject(body);
 
-    if (path === "") {
+    if (path === "discover") {
       return this.parseGetPayload(payload);
     }
 
@@ -138,6 +142,14 @@ export class ResponseParser {
       return this.parseDeletePayload(payload);
     }
 
+    if (path === "resolve") {
+      return this.parseDNSServicePayload(payload);
+    }
+
+    if (path === "health") {
+      return this.parseServicePayload(payload);
+    }
+
     return this.parseGetPayload(payload);
   }
 
@@ -149,6 +161,26 @@ export class ResponseParser {
     }
 
     return body;
+  }
+
+  private static parseServicePayload(
+    payload: JsonObject
+  ):ServicePayload {
+    return {
+      kind: "SERVICE_PAYLOAD",
+      health: this.requiredString(payload.health, "health")
+    };
+  }
+
+  private static parseDNSServicePayload(
+    payload: JsonObject
+  ): DNSServicePayload {
+    return {
+      kind: "DNS_SERVICE_PAYLOAD",
+      instanceName: this.requiredString(payload.instanceName, "instanceName"),
+      host: this.requiredString(payload.host, "host"),
+      port: this.requiredString(payload.port, "port")
+    };
   }
 
   private static parseGetPayload(

@@ -1,8 +1,7 @@
 import { Socket } from "net";
 import { isValidRequest } from "@/@types/contracts/Request";
-import {RegistryService} from "../service/RegistryService";
+import { RegistryService } from "../service/RegistryService";
 import { Request } from "@/@types/contracts/Request";
-import { ErrorHandler } from "@/infra/middleware/Error";
 import { GetRegistryPayload } from "@/@types/contracts/payload/GetRegistryPayload";
 import { CreateRegistryPayload } from "@/@types/contracts/payload/CreateRegistryPayload";
 import { DeleteRegistryPayload } from "@/@types/contracts/payload/DeleteRegistryPayload";
@@ -29,7 +28,7 @@ export class RegistryController {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
-            return ErrorHandler.handle("Corpo da requisição inválido", socket);      
+            return;      
         }
 
         const payload = validRequest.body.payload;
@@ -43,7 +42,7 @@ export class RegistryController {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
-            return ErrorHandler.handle("Corpo da requisição inválido", socket);      
+            return;      
         }
 
         const payload = validRequest.body.payload;
@@ -57,7 +56,7 @@ export class RegistryController {
         const validRequest = isValidRequest(request, socket);
         
         if (!validRequest) {
-            return ErrorHandler.handle("Corpo da requisição inválido", socket);      
+            return;      
         }
         
         const payload = validRequest.body.payload;

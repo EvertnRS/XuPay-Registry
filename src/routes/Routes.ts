@@ -4,16 +4,21 @@ import { ErrorHandler } from "../infra/middleware/Error";
 import { RegistryRepositoryImpl } from "../modules/registry/domain/repository/RegistryRepositoryImpl";
 import { RegistryService } from "../modules/registry/service/RegistryService";
 import { RegistryController } from "../modules/registry/controller/RegistryController";
+import { HealthWorker } from "@/modules/registry/service/worker/HealthWorker";
 
 export class Routes {
     private registryRepositoryImpl: RegistryRepositoryImpl;
     private registryService: RegistryService;
     private registryController: RegistryController;
+    private healthWorker: HealthWorker;
 
     constructor() {
         this.registryRepositoryImpl = new RegistryRepositoryImpl();
         this.registryService = new RegistryService(this.registryRepositoryImpl);
         this.registryController = new RegistryController(this.registryService);
+        this.healthWorker = new HealthWorker(this.registryRepositoryImpl);
+
+        this.healthWorker.start();
     }
 
     public handle(request: Request, socket: Socket): void {

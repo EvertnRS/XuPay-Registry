@@ -37,4 +37,28 @@ export class RegistryRepositoryImpl implements IRegistryRepository {
             }
         });
     }
+
+    public async findActives(): Promise<Array<RegistryInstance>> {
+        return await prismaClient.registryInstance.findMany({
+            where: {
+                status: InstanceStatus.ACTIVE
+            }
+        });
+    }
+
+    public async findById(id: string): Promise<RegistryInstance | null> {
+        return await prismaClient.registryInstance.findUnique({
+            where: {
+                id: id
+            }
+        });
+    }
+
+    public async findByInstanceName(instanceName: string): Promise<RegistryInstance | null> {
+        return await prismaClient.registryInstance.findUnique({
+            where: {
+                instanceName: instanceName
+            }
+        });
+    }
 }

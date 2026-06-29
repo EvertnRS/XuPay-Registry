@@ -43,7 +43,15 @@ export class RegistryService {
         if (!instanceName || !event || !path) {
             return ErrorHandler.handle("Todos os campos são obrigatórios", socket);
         }
-        
+
+        const existingRegistry = await this.registryRepository.findByInstanceName(instanceName);
+
+        if (existingRegistry) {
+            console.log(`Registro existente encontrado, atualizando status para ATIVO: ${instanceName}`);
+            this.updateRegistry(existingRegistry.id, "ACTIVE", socket);
+            return;
+        }
+
         const createdRegistry = await this.registryRepository.createRegistry({
             event,
             instanceName,
@@ -71,6 +79,12 @@ export class RegistryService {
 
         if (!status) {
             return ErrorHandler.handle("Status de instância para essa rota é obrigatório", socket);
+        }
+
+        const existingRegistry = await this.registryRepository.findById(id);
+
+        if (!existingRegistry) {
+            return ErrorHandler.handle(`Registro com id ${id} não encontrado`, socket);
         }
 
         const parsedStatus = status as InstanceStatus;
