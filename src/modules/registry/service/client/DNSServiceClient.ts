@@ -56,7 +56,7 @@ export class DNSServiceClient {
       service: process.env.XUPAY_SERVICE_NAME || "xupay-service-registry",
       secret: process.env.XUPAY_SERVICE_SECRET,
       body: {
-        instanceName
+        domain: instanceName
       },
     });
   }

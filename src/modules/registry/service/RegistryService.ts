@@ -19,7 +19,7 @@ export class RegistryService {
         }
 
         const responseBody = {
-            registries: 
+            instances: 
                 registries.map(registry => {
                     return {
                         id: registry.id,
